@@ -1,17 +1,17 @@
 {% load static %}
 <nav>
-  <div class="flex p-0 bg-blue-300 justify-around">
+  <div class="flex p-0 bg-blue-300 justify-around shadow">
     <img src="{% static 'media/logo2.png' %}" class="h-8 logo-without-background mt-1" alt="Logo" />
 
     <a href="{% url 'status' %}" class="py-2 px-3 text-gray-900 rounded-full hover:bg-gray-100 font-bold">สถานะการนัด</a>
 
-    <a href="{% url 'appointment' %}" class="py-2 px-3 text-gray-900 rounded-full hover:bg-gray-100 font-bold">นัดอาจารย์</a>
+    <a href="{% url 'appo' %}" class="py-2 px-3 text-gray-900 rounded-full hover:bg-gray-100 font-bold">นัดอาจารย์</a>
 
     <a href="{% url 'score' %}" class="py-2 px-3 text-gray-900 rounded-full hover:bg-gray-100 font-bold">คะแนน</a>
 
-    <a href="{% url 'editprofile' %}" class="py-2 px-3 text-gray-900 rounded-full hover:bg-gray-100 font-bold">แก้ไขข้อมูลส่วนตัว</a>
+    <a href="{% url 'edit' %}" class="py-2 px-3 text-gray-900 rounded-full hover:bg-gray-100 font-bold">แก้ไขข้อมูลส่วนตัว</a>
 
-    <p class="py-2 px-3 text-amber-700 rounded-full text-under font-bold">ยินดีต้อนรับ : {{ user.username }}</p>
+    <p class="py-2 px-3 rounded-full text-gray-600 text-under font-bold">ยินดีต้อนรับ : {{ user.username }}</p>
 
     <a href="{% url 'logout' %}" class="py-2 px-3 text-white font-bold rounded-full bg-blue-500 hover:bg-blue-800">ออกจากระบบ</a>
   </div>

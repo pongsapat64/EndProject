@@ -26,6 +26,9 @@ class TimeSlot(models.Model):
     end_time = models.TimeField(blank=True, null=True)
     date = models.DateField(blank=True, null=True)
 
+    def __str__(self):
+        return f"Appointment: {self.date.strftime('%Y-%m-%d')} {self.start_time.strftime('%I:%M %p')} - {self.end_time.strftime('%I:%M %p')}"
+
 class AvailableTime(models.Model):
     lecturer = models.ForeignKey(Lecturer, on_delete=models.CASCADE, blank=True, null=True)
     timeslot = models.ForeignKey(TimeSlot, on_delete=models.CASCADE, blank=True, null=True)

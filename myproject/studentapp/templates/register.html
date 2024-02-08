@@ -13,20 +13,28 @@
             <h1 class="text-3xl font-bold mb-4 text-gray-700 text-center mx-12">สมัครสมาชิก</h1>
             {% csrf_token %}
             <div class="mb-4">
-                <label class="block text-gray-700 text-sm mb-2" for="{{ form.username.id_for_label }}">Username:</label>
-                {{ form.username }}
+                <label class="block text-gray-700 text-md mb-2" for="{{ form.username.id_for_label }}">Username:</label>
+                <input type="text" name="username" class="border-2 border-black rounded-md pr-28" placeholder="Username">
               </div>
               <div class="mb-4">
-                <label class="block text-gray-700 text-sm mb-2" for="{{ form.email.id_for_label }}">Email:</label>
-                {{ form.email }}
+                <label class="block text-gray-700 text-md mb-2" for="{{ form.email.id_for_label }}">Email:</label>
+                <input type="email" name="email" class="border-2 border-black rounded-md pr-28" placeholder="Email">
               </div>
               <div class="mb-4">
-                <label class="block text-gray-700 text-sm mb-2" for="{{ form.password1.id_for_label }}">Password:</label>
-                {{ form.password1 }}
+                <label class="block text-gray-700 text-md mb-2" for="{{ form.password1.id_for_label }}">Password:</label>
+                <input type="password" name="password1" class="border-2 border-black rounded-md pr-28" placeholder="Password">
+                <ul class="text-gray-400 text-xs">
+                  <li>รหัสผ่านต้องประกอบไปด้วย :</li>
+                  <li>• รหัสผ่านต้องมีอย่างน้อย 1 หรือมากกว่าตัวอักษร [a-z]</li>
+                  <li>• รหัสผ่านต้องมีอย่างน้อย 1 หรือมากกว่าตัวอักษร [A-Z]</li>
+                  <li>• รหัสผ่านต้องมีอย่างน้อย 1 หรือมากกว่าตัวเลข [0-9]</li>
+                  <li>• รหัสผ่านต้องมีอย่างน้อย 1 หรือมากกว่าตัวอักษรพิเศษ</li>
+                  <li>• รหัสผ่านต้องมีความยาวอย่างน้อย 10 ตัวอักษรหรือมากกว่า</li>
+                </ul>
               </div>
               <div class="mb-4">
-                <label class="block text-gray-700 text-sm mb-2" for="{{ form.password2.id_for_label }}">Confirm Password:</label>
-                {{ form.password2 }}
+                <label class="block text-gray-700 text-md mb-2" for="{{ form.password2.id_for_label }}">Confirm Password:</label>
+                <input type="password" name="password2" class="border-2 border-black rounded-md pr-28" placeholder="Confirm Password">
               </div>
             <button type="submit" class="btn btn-primary rounded-full bg-blue-200 p-2 w-full">สมัครสมาชิก</button>
             <a href="{% url 'login' %}">

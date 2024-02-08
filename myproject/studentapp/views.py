@@ -9,6 +9,7 @@ import calendar
 from datetime import datetime, timedelta
 from studentapp.forms import ExtendedStudentProfileForm, LoginForm, RegisterForm, UserProfileForm
 from django.contrib.auth.decorators import login_required
+from mysite.models import TimeSlot
 # from .forms import UserCreate
 # Create your views here.
 
@@ -48,6 +49,10 @@ def register(request):
     return render(request, 'register.html', {'form': form})
 
 @login_required(login_url='/studentapp/login')
+def select_committee(request):
+    return redirect(request, 'select_committee.html')
+
+@login_required(login_url='/studentapp/login')
 def appointment(request, year=None, month=None, day=None):
     if year is None or month is None:
         now = datetime.now()
@@ -63,6 +68,29 @@ def appointment(request, year=None, month=None, day=None):
     return render(request, 'appointment.html', {'calendar': cal, 'year': year, 'month': month, 'day': day,
                                                 'prev_year': prev_year, 'prev_month': prev_month,
                                                 'next_year': next_year, 'next_month': next_month})
+
+@login_required(login_url='/studentapp/login')
+def appointment_time_select(request, year, month, day):
+    context = {
+        'year': year,
+        'month': month,
+        'day': day
+    }
+    return render(request, 'app_time_select.html', context)
+
+
+@login_required(login_url='/studentapp/login')
+def appointment_details(request, year, month, day, start_time, end_time):
+    context = {
+        'year': year,
+        'month': month,
+        'day': day,
+        'start_time': start_time,
+        'end_time': end_time,
+    }
+    return render(request, 'app_details.html', context)
+
+
 
 @login_required(login_url='/studentapp/login')
 def status(request):

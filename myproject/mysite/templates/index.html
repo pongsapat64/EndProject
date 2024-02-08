@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>login</title>
+    <!-- Include the Tailwind CSS CDN or add it to your project using npm/yarn -->
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="min-h-screen flex items-center justify-center bg-blue-100">
+    <div class="max-w-md p-6 bg-white rounded-md shadow-md">
+        <h1 class="text-3xl font-bold mb-4 text-gray-700">หน้าเข้าสู่ระบบ</h1>
+        <a href="{% url 'login' %}" class="text-gray-600 block mb-2 text-center text-xl m-2 hover:bg-gray-300 rounded-md">เข้าสู่ระบบ</a>
+        <a href="{% url 'register' %}" class="text-gray-600 block mb-2 text-center text-xl m-2 hover:bg-gray-300 rounded-md">สมัครสมาชิก</a>
+    </div>
+</body>
+</html>

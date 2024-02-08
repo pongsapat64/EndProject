@@ -1,0 +1,49 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="text-center mt-14">
+    <h1 class="text-2xl">นัดอาจารย์</h1>
+    <div class="max-w-2xl mx-auto bg-white rounded shadow p-1">
+        <div class="max-w-2xl mx-auto bg-white rounded shadow p-1">
+            <h2 class="text-2xl font-bold">ปี {{ year }} - เดือน {{ month }}</h2>
+            <p>
+                <a href="{% url 'appointment' year=prev_year month=prev_month %}" class="hover:text-gray-400">&lt;&lt; เดือนก่อนหน้า</a>
+                | <a href="{% url 'appointment' year=next_year month=next_month %}" class="hover:text-gray-400">เดือนถัดไป &gt;&gt;</a>
+            </p>
+
+            <table class="w-full border-collapse border border-gray-500 mt-4">
+                <thead>
+                    <tr>
+                        <th class="border border-gray-500 px-4 py-2">Mon</th>
+                        <th class="border border-gray-500 px-4 py-2">Tue</th>
+                        <th class="border border-gray-500 px-4 py-2">Wed</th>
+                        <th class="border border-gray-500 px-4 py-2">Thu</th>
+                        <th class="border border-gray-500 px-4 py-2">Fri</th>
+                        <th class="border border-gray-500 px-4 py-2">Sat</th>
+                        <th class="border border-gray-500 px-4 py-2">Sun</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for week in calendar %}
+                        <tr>
+                            {% for day in week %}
+                                <td class="border border-gray-500 hover:bg-gray-300 p-2">
+                                    {% if day != 0 %}
+                                        <a href="{% url 'appointment' year=year month=month day=day %}" class="text-l font-semibold">
+                                            {{ day }}
+                                        </a>
+                                    {% else %}
+                                        &nbsp;
+                                    {% endif %}
+                                </td>
+                            {% endfor %}
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

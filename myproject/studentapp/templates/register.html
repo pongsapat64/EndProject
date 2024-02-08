@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <!-- Include the following Tailwind CSS link in the head of your HTML document -->
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="min-h-screen flex items-center justify-center bg-blue-100">
+    <div class="form-container">
+        <form method="post" action="register" class="w-full p-6 bg-white rounded-md shadow-md">
+            <h1 class="text-3xl font-bold mb-4 text-gray-700 text-center mx-12">สมัครสมาชิก</h1>
+            {% csrf_token %}
+            <div class="mb-4">
+                <label class="block text-gray-700 text-sm mb-2" for="{{ form.username.id_for_label }}">Username:</label>
+                {{ form.username }}
+              </div>
+              <div class="mb-4">
+                <label class="block text-gray-700 text-sm mb-2" for="{{ form.email.id_for_label }}">Email:</label>
+                {{ form.email }}
+              </div>
+              <div class="mb-4">
+                <label class="block text-gray-700 text-sm mb-2" for="{{ form.password1.id_for_label }}">Password:</label>
+                {{ form.password1 }}
+              </div>
+              <div class="mb-4">
+                <label class="block text-gray-700 text-sm mb-2" for="{{ form.password2.id_for_label }}">Confirm Password:</label>
+                {{ form.password2 }}
+              </div>
+            <button type="submit" class="btn btn-primary rounded-full bg-blue-200 p-2 w-full">สมัครสมาชิก</button>
+            <a href="{% url 'login' %}">
+                <p class="text-center text-gray-400 mt-4">มีบัญชีแล้ว?</p>
+            </a>
+        </form>
+    </div>
+</body>
+</html>
+
+
+
+

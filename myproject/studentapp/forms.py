@@ -9,11 +9,6 @@ class UserProfileForm(forms.ModelForm):
         model = User
         fields = ("first_name", "last_name")
 
-class ExtendedStudentProfileForm(forms.ModelForm):
-    class Meta:
-        model = Student
-        fields = ("student_project", "student_id", "first_name", "last_name", "subject")
-
 class RegisterForm(UserCreationForm):
     class Meta:
         model = User

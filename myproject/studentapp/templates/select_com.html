@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="text-center mt-14">
+    <h1 class="text-2xl font-bold">นัดอาจารย์</h1>
+    <div class="relative">
+        <!-- Dropdown button -->
+        <button class="bg-blue-500 text-white font-semibold py-2 px-4 rounded inline-flex items-center">
+          <span>Dropdown</span>
+          <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M10 12l-6-6 1.5-1.5L10 9l4.5-4.5L16 6z"/></svg>
+        </button>
+        <!-- Dropdown menu -->
+        <div class="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg z-10 hidden">
+          <a href="#" class="block px-4 py-2 text-gray-800 hover:bg-blue-500 hover:text-white">Option 1</a>
+          <a href="#" class="block px-4 py-2 text-gray-800 hover:bg-blue-500 hover:text-white">Option 2</a>
+          <a href="#" class="block px-4 py-2 text-gray-800 hover:bg-blue-500 hover:text-white">Option 3</a>
+        </div>
+      </div>
+</div>
+
+{% endblock %}

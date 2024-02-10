@@ -1,0 +1,18 @@
+{% load static %}
+<nav>
+  <div class="flex p-0 bg-blue-300 justify-around shadow">
+    <img src="{% static 'media/logo2.png' %}" class="h-8 logo-without-background mt-1" alt="Logo" />
+
+    <a href="{% url 'main' %}" class="py-2 px-3 text-gray-900 rounded-full hover:bg-gray-100 font-bold">หน้าหลัก</a>
+
+    <a href="{% url 'addtime' %}" class="py-2 px-3 text-gray-900 rounded-full hover:bg-gray-100 font-bold">เพิ่มเวลาว่าง</a>
+
+    <a href="{% url 'history' %}" class="py-2 px-3 text-gray-900 rounded-full hover:bg-gray-100 font-bold">ประวัติการถูกนัด</a>
+
+    <a href="{% url 'editlec' %}" class="py-2 px-3 text-gray-900 rounded-full hover:bg-gray-100 font-bold">แก้ไขข้อมูลส่วนตัว</a>
+
+    <p class="py-2 px-3 rounded-full text-gray-600 text-under font-bold">ยินดีต้อนรับ : {{ user.first_name }}</p>
+
+    <a href="{% url 'logout' %}" class="py-2 px-3 text-white font-bold rounded-full bg-blue-500 hover:bg-blue-800">ออกจากระบบ</a>
+  </div>
+</nav>

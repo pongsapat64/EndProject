@@ -10,7 +10,7 @@ class Project(models.Model):
     year = models.CharField(max_length=5, null=True, blank=True)
 
     def __str__(self) -> str:
-        return f' topic:{self.topic} advier:{self.adviser} document:{self.document} slide:{self.presentationSlide} year:{self.year}'
+        return f' topic:{self.topic} document:{self.document} slide:{self.presentationSlide} year:{self.year}'
 
 class Student(models.Model):
     student_project = models.ForeignKey(Project, on_delete=models.DO_NOTHING, null=True, blank=True)

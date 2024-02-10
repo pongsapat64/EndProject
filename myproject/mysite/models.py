@@ -49,5 +49,14 @@ class ProjectManager(models.Model):
     student = models.ForeignKey(Student, on_delete=models.CASCADE, blank=True, null=True)
     comadviser = models.ForeignKey(Comadviser, on_delete=models.CASCADE, null=True)
 
+class Role(models.Model):
+    DEFAULT_ROLES = ['Admin', 'Lecturer', 'Student', 'Adviser', 'Committee']
+
+    name = models.CharField(max_length=50, default=DEFAULT_ROLES[0], choices=[(role, role) for role in DEFAULT_ROLES])
+    users = models.ManyToManyField(User, related_name='roles', blank=True)
+
+    def str(self):
+        return self.name
+
 
 

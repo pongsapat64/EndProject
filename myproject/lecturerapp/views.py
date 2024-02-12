@@ -1,7 +1,7 @@
 from django.http import HttpResponse
 from django.shortcuts import redirect, render
 from mysite.models import Lecturer
-from studentapp.forms import LoginForm, RegisterForm, UserProfileForm
+from studentapp.forms import LoginForm, RegisterForm, UserProfileForm, LecturerProfileForm
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib.auth.models import User
 
@@ -33,29 +33,16 @@ def history(req):
 @user_passes_test(is_Lecturer)
 @login_required(login_url='/mysite/login')
 def editprofile(req):
-    if req.method == 'POST':
-        form = UserProfileForm(req.POST)
-        if form.is_valid():
-            if req.user.is_authenticated:
-                existing_user = User.objects.filter(user=req.user).first()
+    user_form = UserProfileForm(instance=req.user)
+    lecturer_form = LecturerProfileForm(instance=req.user.lecturer)
 
-                if existing_user:
-                    user = User.objects.get(user=req.user)
-                    form = UserProfileForm(req.POST, instance=user)
-                    if form.is_valid():
-                        form.instance.owner = req.user
-                        form.save()
-                        return render(req,'editprofileLec.html',{'user':user})
-                else:
-                    user = form.save(commit=False)
-                    user.user = req.user
-                    user.save()
-                    return redirect('/')  
-            else:
-                return redirect('login')
-        else:
-            print(form.errors)
-    else:
-        form = UserProfileForm()
-    return render(req, 'editprofileLec.html', {'form': form})
+    if req.method == 'POST':
+        user_form = UserProfileForm(req.POST, instance=req.user)
+        lecturer_form = LecturerProfileForm(req.POST, instance=req.user.lecturer)
+        if user_form.is_valid() and lecturer_form.is_valid():
+            user_form.save()
+            lecturer_form.save()
+            return redirect('editlec')
+    
+    return render(req, 'editprofileLec.html', {'user_form': user_form, 'lecturer_form': lecturer_form})
     

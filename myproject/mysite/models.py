@@ -6,8 +6,10 @@ from studentapp.models import *
 class Lecturer(models.Model):
     first_name = models.CharField(max_length=100)
     last_name = models.CharField(max_length=100)
-    email = models.EmailField(max_length=100)
     user = models.OneToOneField(User, on_delete=models.CASCADE, null=True)
+
+    def __str__(self):
+        return f"{self.first_name} {self.last_name}"
 
 class Adviser(models.Model):
     lecturer = models.ForeignKey(Lecturer, on_delete=models.CASCADE, blank=True, null=True)

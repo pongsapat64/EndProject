@@ -28,3 +28,6 @@ class RegisterForm(UserCreationForm):
 class LoginForm(forms.Form):
     username = forms.CharField(label='Username', max_length=150)
     password = forms.CharField(label='Password', widget=forms.PasswordInput)
+
+class SelectForm(forms.Form):
+    items = forms.ModelMultipleChoiceField(queryset=Lecturer.objects.all(), widget=forms.CheckboxSelectMultiple)

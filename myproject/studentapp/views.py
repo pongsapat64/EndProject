@@ -8,7 +8,7 @@ from studentapp.models import Student
 from mysite.views import *
 import calendar
 from datetime import datetime, timedelta
-from studentapp.forms import LoginForm, RegisterForm, StudentProfileForm, UserProfileForm
+from studentapp.forms import LoginForm, RegisterForm, SelectForm, StudentProfileForm, UserProfileForm
 from django.contrib.auth.decorators import login_required, user_passes_test
 from mysite.models import TimeSlot
 # from .forms import UserCreate
@@ -20,14 +20,27 @@ def is_Student(user):
     else:
         return False
 
-@user_passes_test(is_Student)
-@login_required(login_url='/mysite/login')
 def select_committee(req):
-    return redirect(req, 'select_committee.html')
+        if req.method == 'POST':
+            form = SelectForm(req.POST)
+            if form.is_valid():
+                selected_options = form.cleaned_data['items']
+                return render(req, 'appointment.html', {'selected_options': selected_options})
+        else:
+            form = SelectForm()
+        return render(req, 'select_com.html', {'form': form})
 
 @user_passes_test(is_Student)
 @login_required(login_url='/mysite/login')
 def appointment(req, year=None, month=None, day=None):
+    if req.method == 'POST':
+        form = SelectForm(req.POST)
+        if form.is_valid():
+            selected_options = form.cleaned_data['items']
+            return render(req, 'appointment.html', {'selected_options': selected_options})
+    else:
+        form = SelectForm()
+
     if year is None or month is None:
         now = datetime.now()
         year, month = now.year, now.month
@@ -40,8 +53,9 @@ def appointment(req, year=None, month=None, day=None):
     next_year = year + 1 if month == 12 else year
 
     return render(req, 'appointment.html', {'calendar': cal, 'year': year, 'month': month, 'day': day,
-                                                'prev_year': prev_year, 'prev_month': prev_month,
-                                                'next_year': next_year, 'next_month': next_month})
+                                            'prev_year': prev_year, 'prev_month': prev_month,
+                                            'next_year': next_year, 'next_month': next_month,
+                                            'form': form})
 
 @user_passes_test(is_Student)
 @login_required(login_url='/mysite/login')

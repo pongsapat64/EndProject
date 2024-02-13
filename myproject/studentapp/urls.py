@@ -7,6 +7,7 @@ urlpatterns = [
     path('status', views.status, name='status'),
     path('score', views.score, name='score'),
     path('editprofile', views.editprofile, name='edit'),
+    path('select_committee', views.select_committee, name='select'),
     path('appointment', views.appointment, name='appo'),
     path('appointment/<int:year>/<int:month>/', views.appointment, name='appo'),
     path('appointment/<int:year>/<int:month>/<int:day>/', views.appointment_time_select, name='app_time'),

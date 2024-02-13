@@ -81,7 +81,7 @@ def create_user(req):
         form = UserProfileForm(req.POST)
         if form.is_valid():
             form.save()
-            return redirect('read')  # Redirect to some page after successful creation
+            return redirect('read')  
     else:
         form = UserProfileForm()
     return render(req, 'create.html', {'form': form})
@@ -94,7 +94,7 @@ def update_user(request, id):
         form = UserProfileForm(request.POST, instance=user)
         if form.is_valid():
             form.save()
-            return redirect('read')  # Redirect to some page after successful update
+            return redirect('read')  
     else:
         form = UserProfileForm(instance=user)
     return render(request, 'update.html', {'form': form})
@@ -104,4 +104,4 @@ def update_user(request, id):
 def delete_user(req, id):
     user = User.objects.get(pk=id)
     user.delete()
-    return redirect('read')  # Redirect to some page after successful deletion
+    return redirect('read') 

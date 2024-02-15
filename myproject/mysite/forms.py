@@ -1,8 +1,8 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
-from mysite.models import Lecturer
-from .models import Student
+from .models import Lecturer, TimeSlot
+from studentapp.models import Student
 
 
 class UserProfileForm(forms.ModelForm):
@@ -31,3 +31,14 @@ class LoginForm(forms.Form):
 
 class SelectForm(forms.Form):
     items = forms.ModelMultipleChoiceField(queryset=Lecturer.objects.all(), widget=forms.CheckboxSelectMultiple)
+
+class TimeSlotForm(forms.Form):
+    time_slot = forms.MultipleChoiceField(
+        choices=[],
+        widget=forms.CheckboxSelectMultiple
+    )
+
+    def __init__(self, *args, **kwargs):
+        time_choices = kwargs.pop('time_choices', [])
+        super(TimeSlotForm, self).__init__(*args, **kwargs)
+        self.fields['time_slot'].choices = time_choices

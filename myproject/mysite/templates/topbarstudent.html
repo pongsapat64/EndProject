@@ -11,7 +11,7 @@
   
       <a href="{% url 'edit' %}" class="py-2 px-3 text-gray-900 rounded-full hover:bg-gray-100 font-bold">แก้ไขข้อมูลส่วนตัว</a>
   
-      <p class="py-2 px-3 rounded-full text-gray-600 text-under font-bold">ยินดีต้อนรับ : {{ user.username }}</p>
+      <p class="py-2 px-3 rounded-full text-gray-600 text-under font-bold">ยินดีต้อนรับ : {{ user.first_name }}</p>
   
       <a href="{% url 'logout' %}" class="py-2 px-3 text-white font-bold rounded-full bg-blue-500 hover:bg-blue-800">ออกจากระบบ</a>
     </div>

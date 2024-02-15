@@ -1,17 +1,11 @@
 from django.shortcuts import redirect, render
-from django.contrib import messages
-from django.contrib.auth import (authenticate, 
-                                 login, 
-                                 logout)
+from django.contrib.auth import (authenticate, login, logout)
 from django.contrib.auth.models import User
-from studentapp.models import Student
 from mysite.views import *
 import calendar
-from datetime import datetime, timedelta
-from studentapp.forms import LoginForm, RegisterForm, SelectForm, StudentProfileForm, UserProfileForm
+from datetime import datetime
+from mysite.forms import *
 from django.contrib.auth.decorators import login_required, user_passes_test
-from mysite.models import TimeSlot
-# from .forms import UserCreate
 # Create your views here.
     
 def is_Student(user):

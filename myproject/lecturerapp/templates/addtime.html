@@ -1,9 +1,52 @@
 {% extends 'base2.html' %}
 
 {% block content %}
-    <div class="text-center mt-14">
-        <h1 class="text-2xl font-bold">เพิ่มเวลาว่าง</h1>
+
+<div class="text-center mt-14">
+    <h1 class="text-2xl font-bold">เพิ่มเวลาว่าง</h1>
+    <div class="max-w-2xl mx-auto bg-white rounded shadow p-1 border-2">
+        {% csrf_token %}
+        <div class="form-group">
+            <label for="id_items" class="font-bold">Select Committee:</label>
+            {{ form.items }}
+        </div>
+        <h2 class="text-2xl">ปี {{ year }} - เดือน {{ month }}</h2>
+        <p>
+            <a href="{% url 'addtime' year=prev_year month=prev_month %}" class="hover:text-gray-400">&lt;&lt; เดือนก่อนหน้า</a>
+            | <a href="{% url 'addtime' year=next_year month=next_month %}" class="hover:text-gray-400">เดือนถัดไป &gt;&gt;</a>
+        </p>
+
+        <table class="w-full border-collapse border border-gray-500 mt-4">
+            <thead>
+                <tr>
+                    <th class="border border-gray-500 px-8 py-6">Mon</th>
+                    <th class="border border-gray-500 px-8 py-6">Tue</th>
+                    <th class="border border-gray-500 px-8 py-6">Wed</th>
+                    <th class="border border-gray-500 px-8 py-6">Thu</th>
+                    <th class="border border-gray-500 px-8 py-6">Fri</th>
+                    <th class="border border-gray-500 px-8 py-6">Sat</th>
+                    <th class="border border-gray-500 px-8 py-6">Sun</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for week in calendar %}
+                    <tr>
+                        {% for day in week %}
+                            <td class="border border-gray-500 hover:bg-gray-300 p-2 px-8 py-6">
+                                {% if day != 0 %}
+                                    <a href="{% url 'addtime_time' year=year month=month day=day %}" class="text-l font-semibold">
+                                        {{ day }}
+                                    </a>
+                                {% else %}
+                                    &nbsp;
+                                {% endif %}
+                            </td>
+                        {% endfor %}
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
     </div>
+</div>
+
 {% endblock %}
-
-

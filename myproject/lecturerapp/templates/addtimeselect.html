@@ -1,0 +1,40 @@
+{% extends 'base2.html' %}
+
+{% block content %}
+<div class="text-center mt-14">
+    <h1 class="text-4xl font-bold pb-4">เลือกเวลา</h1>
+    <div class="max-w-2xl mx-auto bg-white rounded shadow p-1 border-2">
+        <form method="post">
+            {% csrf_token %}
+            <div class="pt-4 pb-4">
+                <input type="checkbox" name="time_slot" value="08:00 - 09:00" id="slot1">
+                <label for="slot1">08:00 - 09:00</label>
+                
+                <input type="checkbox" name="time_slot" value="09:00 - 10:00" id="slot2">
+                <label for="slot2">09:00 - 10:00</label>
+
+                <input type="checkbox" name="time_slot" value="10:00 - 11:00" id="slot3">
+                <label for="slot3">10:00 - 11:00</label>
+
+                <input type="checkbox" name="time_slot" value="11:00 - 12:00" id="slot4">
+                <label for="slot4">11:00 - 12:00</label>
+
+                <input type="checkbox" name="time_slot" value="12:00 - 13:00" id="slot5">
+                <label for="slot5">12:00 - 13:00</label>
+
+                <input type="checkbox" name="time_slot" value="13:00 - 14:00" id="slot6">
+                <label for="slot6">13:00 - 14:00</label>
+
+                <input type="checkbox" name="time_slot" value="14:00 - 15:00" id="slot7">
+                <label for="slot7">14:00 - 15:00</label>
+
+                <input type="checkbox" name="time_slot" value="15:00 - 16:00" id="slot8">
+                <label for="slot8">15:00 - 16:0</label>
+
+            </div>
+            <button type="submit" class="bg-blue-500 text-white py-2 px-4 rounded">Submit</button>
+        </form>
+    </div>
+</div>
+
+{% endblock %}

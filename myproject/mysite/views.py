@@ -1,6 +1,6 @@
 from django.shortcuts import redirect, render
 from mysite.models import Lecturer
-from studentapp.forms import LoginForm, RegisterForm, UserProfileForm
+from mysite.forms import LoginForm, RegisterForm, UserProfileForm
 from django.contrib.auth import (authenticate, 
                                  login, 
                                  logout)

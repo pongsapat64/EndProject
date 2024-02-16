@@ -5,11 +5,11 @@
 <div class="text-center mt-14">
     <h1 class="text-2xl font-bold">นัดอาจารย์</h1>
     <div class="max-w-2xl mx-auto bg-white rounded shadow p-1 border-2">
-        {% csrf_token %}
-        <div class="form-group">
+        <!-- <div class="form-group">
             <label for="id_items" class="font-bold">Select Committee:</label>
             {{ form.items }}
-        </div>
+            <button class="rounded-full bg-blue-300" type="submit">submit</button>
+        </div> -->
         <h2 class="text-2xl">ปี {{ year }} - เดือน {{ month }}</h2>
         <p>
             <a href="{% url 'appo' year=prev_year month=prev_month %}" class="hover:text-gray-400">&lt;&lt; เดือนก่อนหน้า</a>

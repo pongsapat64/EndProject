@@ -41,6 +41,12 @@ INSTALLED_APPS = [
     "mysite",
     "studentapp",
     "lecturerapp",
+    'django.contrib.sites', # New
+    'allauth',
+    'allauth.socialaccount', # New 
+    'allauth.socialaccount.providers.google',
+    'social_django',
+    'allauth.account',
 ]
 
 MIDDLEWARE = [
@@ -48,9 +54,11 @@ MIDDLEWARE = [
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
+    'allauth.account.middleware.AccountMiddleware',
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    
 ]
 
 ROOT_URLCONF = "myproject.urls"
@@ -109,7 +117,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = "en-us"
 
-TIME_ZONE = "UTC"
+TIME_ZONE = "Asia/Bangkok"
 
 USE_I18N = True
 
@@ -131,3 +139,4 @@ MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
 
 LOGIN_URL = 'login'
+REGISTER_URL = 'register'

@@ -57,8 +57,8 @@ class Role(models.Model):
     name = models.CharField(max_length=50, default=DEFAULT_ROLES[0], choices=[(role, role) for role in DEFAULT_ROLES])
     users = models.ManyToManyField(User, related_name='roles', blank=True)
 
-    def str(self):
-        return self.name
+    def __str__(self):
+        return f"{self.name} {self.users}"
 
 
 

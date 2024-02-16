@@ -32,6 +32,7 @@ class LoginForm(forms.Form):
 class SelectForm(forms.Form):
     items = forms.ModelMultipleChoiceField(queryset=Lecturer.objects.all(), widget=forms.CheckboxSelectMultiple)
 
+
 class TimeSlotForm(forms.Form):
     time_slot = forms.MultipleChoiceField(
         choices=[],

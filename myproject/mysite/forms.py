@@ -43,3 +43,4 @@ class TimeSlotForm(forms.Form):
         time_choices = kwargs.pop('time_choices', [])
         super(TimeSlotForm, self).__init__(*args, **kwargs)
         self.fields['time_slot'].choices = time_choices
+

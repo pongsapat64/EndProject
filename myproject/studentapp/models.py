@@ -22,9 +22,6 @@ class Student(models.Model):
 
     def __str__(self):
         return f"{self.first_name} {self.last_name}"
-    
-class StudentScore(models.Model):
-    student = models.ForeignKey(Student, on_delete=models.DO_NOTHING , null=True, blank=True)
 
 
  

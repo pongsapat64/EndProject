@@ -1,6 +1,7 @@
 from django.http import HttpResponse
 from django.shortcuts import redirect, render
-from mysite.models import AvailableTime
+from studentapp.models import Project
+from mysite.models import AvailableTime, Score
 from mysite.forms import *
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib.auth.models import User
@@ -99,4 +100,23 @@ def editprofile(req):
             return redirect('editlec')
     
     return render(req, 'editprofileLec.html', {'user_form': user_form, 'lecturer_form': lecturer_form})
+
+user_passes_test(is_Lecturer)
+@login_required(login_url='/mysite/login')
+def give_score(req, id):
+    student = Student.objects.get(pk=id)
+    lecturer = Lecturer.objects.get(user=req.user)
+    if req.method == 'POST':
+        obj = Score.objects.create(student=student, lecturer=lecturer, scored=req.POST['scored'])
+        obj.save()
+        return redirect('showstudents')
+
+    return render(req, 'givescore.html')
+
+user_passes_test(is_Lecturer)
+@login_required(login_url='/mysite/login')
+def show_student(req):
+    student = Student.objects.all()
+    return render(req, 'showstudents.html', {'student':student})
+
     

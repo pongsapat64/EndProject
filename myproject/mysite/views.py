@@ -68,14 +68,11 @@ def register(req):
 
     return render(req, 'register.html', {'form': form})
 
-@user_passes_test(is_admin)
-@login_required(login_url='/mysite/login')
+
 def read_user(req):
     obj = User.objects.all()
     return render(req, 'read.html', {'user':obj})
 
-@user_passes_test(is_admin)
-@login_required(login_url='/mysite/login')
 def create_user(req):
     if req.method == 'POST':
         form = UserProfileForm(req.POST)
@@ -86,8 +83,6 @@ def create_user(req):
         form = UserProfileForm()
     return render(req, 'create.html', {'form': form})
 
-@user_passes_test(is_admin)
-@login_required(login_url='/mysite/login')
 def update_user(request, id):
     user = User.objects.get(pk=id)
     if request.method == 'POST':
@@ -99,8 +94,6 @@ def update_user(request, id):
         form = UserProfileForm(instance=user)
     return render(request, 'update.html', {'form': form})
 
-@user_passes_test(is_admin)
-@login_required(login_url='/mysite/login')
 def delete_user(req, id):
     user = User.objects.get(pk=id)
     user.delete()

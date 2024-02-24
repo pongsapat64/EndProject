@@ -8,4 +8,6 @@ urlpatterns = [
     path('addtime/<int:year>/<int:month>/', views.addtime, name='addtime'),
     path('addtime/<int:year>/<int:month>/<int:day>/', views.addtime_select, name='addtime_time'),
     path('history', views.history, name='history'),
+    path('givescore/<int:id>', views.give_score, name='givescore'),
+    path('showstudents', views.show_student, name='showstudents'),
 ]

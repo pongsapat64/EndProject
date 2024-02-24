@@ -145,7 +145,6 @@ def get_calendar_service():
     return service
 
 
-
 def create_event_with_attendees2(req):
     start_time = Lecturer
     end_time = "2024-02-16T12:00:00"

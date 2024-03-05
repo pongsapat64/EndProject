@@ -1,7 +1,7 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
-from .models import Lecturer, TimeSlot
+from .models import Lecturer, Role, TimeSlot
 from studentapp.models import Student
 
 
@@ -9,6 +9,23 @@ class UserProfileForm(forms.ModelForm):
     class Meta:
         model = User
         fields = ("first_name", "last_name", "email")
+
+class UserCreateForm(forms.ModelForm):
+    class Meta:
+        model = User
+        fields = ("username", "password", 'email')
+
+    def save(self, commit=True):
+        user = super(UserCreateForm, self).save(commit=False)
+        if commit:
+            user.save()
+        if self.cleaned_data.get('is_student'):
+            student_role = Role.objects.get(name='Student')
+            user.roles.add(student_role)
+        if self.cleaned_data.get('is_lecturer'):
+            lecturer_role = Role.objects.get(name='Lecturer')
+            user.roles.add(lecturer_role)
+        return user
 
 class LecturerProfileForm(forms.ModelForm):
     class Meta:
@@ -18,7 +35,7 @@ class LecturerProfileForm(forms.ModelForm):
 class StudentProfileForm(forms.ModelForm):
     class Meta:
         model = Student
-        fields = ('first_name', "last_name")
+        fields = ('first_name', "last_name", "student_id")
 
 class RegisterForm(UserCreationForm):
     class Meta:
@@ -28,10 +45,6 @@ class RegisterForm(UserCreationForm):
 class LoginForm(forms.Form):
     username = forms.CharField(label='Username', max_length=150)
     password = forms.CharField(label='Password', widget=forms.PasswordInput)
-
-class SelectForm(forms.Form):
-    items = forms.ModelMultipleChoiceField(queryset=Lecturer.objects.all(), widget=forms.CheckboxSelectMultiple)
-
 
 class TimeSlotForm(forms.Form):
     time_slot = forms.MultipleChoiceField(

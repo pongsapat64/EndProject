@@ -1,6 +1,7 @@
 from django.db import models
 from studentapp.models import *
 from studentapp.models import Student
+from django.contrib.auth.models import User
 
 # Create your models here.
     
@@ -21,12 +22,13 @@ class TimeSlot(models.Model):
     end_time = models.TimeField(blank=True, null=True)
     date = models.DateField(blank=True, null=True)
 
-    def __str__(self):
-        return f"Available Time: {self.date.strftime('%Y-%m-%d')} {self.start_time.strftime('%I:%M %p')} - {self.end_time.strftime('%I:%M %p')}"
 
 class AvailableTime(models.Model):
     lecturer = models.ForeignKey(Lecturer, on_delete=models.CASCADE, blank=True, null=True)
-    timeslot = models.ForeignKey(TimeSlot, on_delete=models.CASCADE, blank=True, null=True)
+    start_time = models.TimeField(blank=True, null=True)
+    end_time = models.TimeField(blank=True, null=True)
+    date = models.DateField(blank=True, null=True)
+    
 
 class Score(models.Model):
     student = models.ForeignKey(Student, null=True, on_delete=models.CASCADE)
@@ -41,7 +43,8 @@ class Role(models.Model):
     users = models.ManyToManyField(User, related_name='roles', blank=True)
 
     def __str__(self):
-        return f"{self.name} {self.users}"
+        user_names = ', '.join([user.username for user in self.users.all()])
+        return f"{user_names} is {self.name} "
 
 
 

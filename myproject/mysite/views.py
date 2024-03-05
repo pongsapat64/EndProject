@@ -1,6 +1,8 @@
+from django.db import IntegrityError
+from django.http import HttpResponse
 from django.shortcuts import redirect, render
 from mysite.models import Lecturer
-from mysite.forms import LoginForm, RegisterForm, UserProfileForm
+from mysite.forms import LoginForm, RegisterForm, UserCreateForm, UserProfileForm
 from django.contrib.auth import (authenticate, 
                                  login, 
                                  logout)
@@ -75,24 +77,28 @@ def read_user(req):
 
 def create_user(req):
     if req.method == 'POST':
-        form = UserProfileForm(req.POST)
+        form = UserCreateForm(req.POST)
         if form.is_valid():
-            form.save()
-            return redirect('read')  
+            username = form.cleaned_data['username']
+            if not User.objects.filter(username=username).exists():
+                form.save()
+                return redirect('read')
+            else:
+                return HttpResponse("Username is already taken.")
     else:
-        form = UserProfileForm()
+        form = UserCreateForm()
     return render(req, 'create.html', {'form': form})
 
 def update_user(request, id):
     user = User.objects.get(pk=id)
     if request.method == 'POST':
-        form = UserProfileForm(request.POST, instance=user)
+        form = UserCreateForm(request.POST, instance=user)
         if form.is_valid():
             form.save()
             return redirect('read')  
     else:
-        form = UserProfileForm(instance=user)
-    return render(request, 'update.html', {'form': form})
+        form = UserCreateForm(instance=user)
+    return render(request, 'update.html', {'user': user})
 
 def delete_user(req, id):
     user = User.objects.get(pk=id)

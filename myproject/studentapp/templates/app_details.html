@@ -7,11 +7,15 @@
     <div class="max-w-2xl mx-auto bg-white rounded shadow p-1 border-2">
         <h2 class="text-2xl p-1 mt-4">วันที่: {{ year }}-{{ month }}-{{ day }}</h2>
         <form method="post">
-            {% csrf_token %}
-            {{form.as_p}}
-        <p>เวลา : {{ start_time }} - {{ end_time }}</p>
-        <p>{{ items }}</p>
-        <button type="submit">Submit</button>
+            <div>
+                <p>เวลา : {{ start_time }} - {{ end_time }}</p>
+                <p>{{ items }}</p>
+                <p>ผู้นำเสนอ</p>
+                <p>นาย{{user.first_name}} {{user.last_name}}</p>
+                <p>รหัสนักศึกษา {{ student.student_id }}</p>
+            </div>
+            <br>
+        <button type="submit" class="rounded-full bg-blue-300 text-white font-semibold p-1">Submit</button>
         </form>
     </div>
 </div>

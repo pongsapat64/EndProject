@@ -2,14 +2,53 @@
 
 {% block content %}
 
-<div class="text-center mt-14">
+<head>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.10.0/fullcalendar.min.css" />
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/locale/th.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.10.0/fullcalendar.min.js"></script>
+</head>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+
+        moment.locale('th');
+
+        $('#calendar').fullCalendar({
+            events: '/calendar-events/',
+            locale: 'th',
+
+            eventRender: function (event, element) {
+
+                var eventHtml = '<div class="flex items-center">';
+                if (event.image) {
+                    eventHtml += '<div class="items-center">';
+                    eventHtml += '<a href="pets/' + event.id + '/">';
+                    eventHtml += '<img src="' + event.image + '" class="object-cover mx-auto w-auto">';
+                    eventHtml += '</a>';
+                    eventHtml += '<div class="font-bold mt-2 text-center">' + event.title + '</div>';
+                    eventHtml += '<div class="text-sm text-center">' + moment(event.start).format('LT') + '</div>';
+                    eventHtml += '</div></div>';
+
+                    element.css('#3b3b3b', event.backgroundColor);
+                    element.find('.fc-content').html(eventHtml);
+                }
+            }
+        });
+    });
+</script>
+
+<div id="calendar" class="m-3 max-w-screen-md mx-auto p-4 bg-white mt-5 mb-10 rounded-lg shadow-md border border-gray-500 border-2"></div>
+
+<!-- <div class="text-center mt-14">
     <h1 class="text-2xl font-bold">นัดอาจารย์</h1>
     <div class="max-w-2xl mx-auto bg-white rounded shadow p-1 border-2">
-        <!-- <div class="form-group">
+        <div class="form-group">
             <label for="id_items" class="font-bold">Select Committee:</label>
             {{ form.items }}
             <button class="rounded-full bg-blue-300" type="submit">submit</button>
-        </div> -->
+        </div>
         <h2 class="text-2xl">ปี {{ year }} - เดือน {{ month }}</h2>
         <p>
             <a href="{% url 'appo' year=prev_year month=prev_month %}" class="hover:text-gray-400">&lt;&lt; เดือนก่อนหน้า</a>
@@ -47,6 +86,6 @@
             </tbody>
         </table>
     </div>
-</div>
+</div> -->
 
 {% endblock %}

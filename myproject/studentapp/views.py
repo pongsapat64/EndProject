@@ -1,6 +1,7 @@
 from django.shortcuts import redirect, render
 from django.contrib.auth import (authenticate, login, logout)
 from django.contrib.auth.models import User
+from mysite.models import Score
 from mysite.views import *
 import calendar
 from datetime import datetime
@@ -23,14 +24,10 @@ def is_Student(user):
         return False
 
 def select_committee(req):
-        if req.method == 'POST':
-            form = SelectForm(req.POST)
-            if form.is_valid():
-                print(form)
-                return redirect('appo')
-        else:
-            form = SelectForm()
-        return render(req, 'select_com.html', {'form': form})
+    if req.method == 'POST':
+        selected_options = req.POST.getlist('selected_options')
+        return redirect('next_page')
+    return render(req, 'select_com.html')
 
 @user_passes_test(is_Student)
 @login_required(login_url='/mysite/login')
@@ -63,27 +60,17 @@ def appointment_time_select(req, year, month, day):
 @user_passes_test(is_Student)
 @login_required(login_url='/mysite/login')
 def appointment_details(req, year, month, day, start_time, end_time):
-    if req.method == 'POST':
-        form = SelectForm(req.POST)
-        if form.is_valid():
-            selected_ids = form.cleaned_data['items'] 
-            selected_options = [item.id for item in selected_ids] 
-            req.session['selected_options'] = selected_options
-
-    else:
-        form = SelectForm()
-
+    student = Student.objects.get(user=req.user)
     context = {
         'year': year,
         'month': month,
         'day': day,
         'start_time': start_time,
         'end_time': end_time,
-        'form' : form
+        'student': student,
     }
     return render(req, 'app_details.html', context)
     
-
 
 @user_passes_test(is_Student)
 @login_required(login_url='/mysite/login')
@@ -93,7 +80,13 @@ def status(req):
 @user_passes_test(is_Student)
 @login_required(login_url='/mysite/login')
 def score(req):
-    return render(req, 'score.html')
+    student = Student.objects.get(user=req.user)
+    score = Score.objects.filter(student=student)
+    context = {
+        'student': student,
+        'score': score,
+    }
+    return render(req, 'score.html', context)
 
 @user_passes_test(is_Student)
 @login_required(login_url='/mysite/login')

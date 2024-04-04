@@ -6,7 +6,7 @@ from mysite.forms import *
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib.auth.models import User
 import calendar
-from datetime import datetime
+from datetime import datetime, timedelta
 
 # Create your views here.
 def is_Lecturer(user):
@@ -23,34 +23,52 @@ def mainpage(req):
 
 @user_passes_test(is_Lecturer)
 @login_required(login_url='/mysite/login')
-def addtime(req, year=None, month=None, day=None):
-    if year is None or month is None:
-        now = datetime.now()
-        year, month = now.year, now.month
+def addtime(req,):
+    return render(req, 'addtime.html')
 
-    cal = calendar.monthcalendar(year, month)
 
-    prev_month = month - 1 if month > 1 else 12
-    prev_year = year - 1 if month == 1 else year
-    next_month = month + 1 if month < 12 else 1
-    next_year = year + 1 if month == 12 else year
-
-    return render(req, 'addtime.html', {'calendar': cal, 'year': year, 'month': month, 'day': day,
-                                            'prev_year': prev_year, 'prev_month': prev_month,
-                                            'next_year': next_year, 'next_month': next_month})
-
-def get_freetime(self, request, *args, **kwargs):
+def get_freetime(req):
+    freetimes = AvailableTime.objects.all()
     events = []
-    pets = AvailableTime.objects.all()
 
-    for pet in pets:
-        events.append({
-            'start': pet.time.isoformat(),
-            'end':pet.time.isoformat(),
-            'date':pet.date.isoformat(),
-        })
+    for freetime in freetimes:
+        event = {
+            'id': freetime.id,
+            'title': f'{freetime.lecturer.first_name}  {freetime.lecturer.last_name}',   # ชื่อผู้สอนหรือข้อมูลอื่น ๆ ที่ต้องการแสดง
+            'start': freetime.date.strftime('%Y-%m-%d') + 'T' + freetime.start_time.strftime('%H:%M:%S'),
+            'end': freetime.date.strftime('%Y-%m-%d') + 'T' + freetime.end_time.strftime('%H:%M:%S'),
+            'backgroundColor': '#3b3b3b'  # สีพื้นหลังของเหตุการณ์
+        }
+        events.append(event)
 
     return JsonResponse(events, safe=False)
+
+def create_freetime(req):
+    if req.method == 'POST':
+        lecturer = req.user.lecturer  # สมมติว่ามีการสร้าง field lecturer ในโมเดล Lecturer
+
+        if lecturer:  # ตรวจสอบว่าผู้ใช้ปัจจุบันเป็นอาจารย์หรือไม่
+            start_time = req.POST.get('start_time')
+            end_time = req.POST.get('end_time')
+            date = req.POST.get('date')
+
+            # ตรวจสอบว่ามีข้อมูลเวลาที่มี lecturer_id และ start_time และ end_time และ date เดียวกันหรือไม่
+            if not AvailableTime.objects.filter(lecturer_id=lecturer.id, start_time=start_time, end_time=end_time, date=date).exists():
+                # สร้างหรืออัพเดทวันเวลาที่ใช้งานได้
+                available_time = AvailableTime.objects.create(
+                    lecturer=lecturer,
+                    start_time=start_time,
+                    end_time=end_time,
+                    date=date
+                )
+                return redirect('addtime')
+            else:
+                return JsonResponse({'status': 'error', 'message': 'ข้อมูลซ้ำกัน'})
+        else:
+            return JsonResponse({'status': 'error', 'message': 'คุณไม่ใช่อาจารย์'})
+    else:
+        return render(req, 'addthetime.html')
+
 
 @user_passes_test(is_Lecturer)
 @login_required(login_url='/mysite/login')

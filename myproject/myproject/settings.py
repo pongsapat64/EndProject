@@ -31,6 +31,8 @@ ALLOWED_HOSTS = []
 
 # Application definition
 
+SITE_ID = 2
+
 INSTALLED_APPS = [
     "django.contrib.admin",
     "django.contrib.auth",
@@ -41,13 +43,23 @@ INSTALLED_APPS = [
     "mysite",
     "studentapp",
     "lecturerapp",
-    'django.contrib.sites', # New
+    'django.contrib.sites', 
     'allauth',
-    'allauth.socialaccount', # New 
+    'allauth.account',
+    'allauth.socialaccount',
     'allauth.socialaccount.providers.google',
     'social_django',
-    'allauth.account',
 ]
+
+SOCIALACCOUNT_PROVIDERS = {
+    "google": {
+        "SCOPE": [
+            "profile",
+            "email"
+        ],
+        "AUTH_PARAMS":{"access_type": "online"}
+    }
+}
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
@@ -138,5 +150,18 @@ STATIC_URL = 'static/'
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
 
-LOGIN_URL = 'login'
 REGISTER_URL = 'register'
+
+SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = '776983342224-8ab8a7lsg5n1a2t5ofdghmt2qi2n10g8.apps.googleusercontent.com'
+SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = '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'
+SOCIALACCOUNT_LOGIN_ON_GET=True
+SOCIAL_AUTH_GOOGLE_OAUTH2_SCOPE = ['email']
+SOCIAL_AUTH_URL_NAMESPACE = 'social'
+LOGIN_REDIRECT_URL = '/'
+LOGOUT_REDIRECT_URL = '/'
+
+AUTHENTICATION_BACKENDS = (
+    "django.contrib.auth.backends.ModelBackend",
+    "allauth.account.auth_backends.AuthenticationBackend",
+    "social_core.backends.google.GoogleOAuth2",
+)

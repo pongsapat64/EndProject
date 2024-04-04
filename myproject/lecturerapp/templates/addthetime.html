@@ -1,0 +1,56 @@
+{% extends 'components/base2.html' %}
+
+{% block content %}
+
+<div class="flex justify-center items-center h-screen">
+    <div class="w-full max-w-md">
+        <h1 class="text-3xl font-bold mb-4">เพิ่มเวลาว่าง</h1>
+        {% if not user.is_authenticated %}
+            <p class="text-red-500">กรุณาเข้าสู่ระบบเพื่อใช้งาน</p>
+        {% else %}
+            {% if not user.lecturer %}
+                <p class="text-red-500">คุณไม่ใช่อาจารย์</p>
+            {% else %}
+                <form id="add-time-form" class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4" method="post">
+                    {% csrf_token %}
+                    <div class="mb-4">
+                        <label for="start_time" class="block text-gray-700 text-sm font-bold mb-2">Start Time:</label>
+                        <input type="time" id="start_time" name="start_time" required class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                    </div>
+                    <div class="mb-4">
+                        <label for="end_time" class="block text-gray-700 text-sm font-bold mb-2">End Time:</label>
+                        <input type="time" id="end_time" name="end_time" required class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                    </div>
+                    <div class="mb-4">
+                        <label for="date" class="block text-gray-700 text-sm font-bold mb-2">Date:</label>
+                        <input type="date" id="date" name="date" required class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                    </div>
+                    <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">Add Time</button>
+                </form>
+                <div id="message" class="text-green-500"></div>
+
+                <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+                <script>
+                    $(document).ready(function(){
+                        $('#add-time-form').submit(function(event){
+                            event.preventDefault();
+                            $.ajax({
+                                type: 'POST',
+                                url: '{% url "addthetime" %}',
+                                data: $(this).serialize(),
+                                dataType: 'json',
+                                success: function(response){
+                                    $('#message').text(response.message);
+                                },
+                                error: function(xhr, errmsg, err){
+                                    $('#message').text('สำเร็จ');
+                                }
+                            });
+                        });
+                    });
+                </script>
+            {% endif %}
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

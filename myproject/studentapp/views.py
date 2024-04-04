@@ -1,3 +1,4 @@
+from django.http import JsonResponse
 from django.shortcuts import redirect, render
 from django.contrib.auth import (authenticate, login, logout)
 from django.contrib.auth.models import User
@@ -23,11 +24,10 @@ def is_Student(user):
     else:
         return False
 
-def select_committee(req):
-    if req.method == 'POST':
-        selected_options = req.POST.getlist('selected_options')
-        return redirect('next_page')
-    return render(req, 'select_com.html')
+def show_committee(req):
+    lecturers = Lecturer.objects.all()
+    return render(req, 'show_committee.html', {'lecturers': lecturers})
+    
 
 @user_passes_test(is_Student)
 @login_required(login_url='/mysite/login')
@@ -105,16 +105,14 @@ def editprofile(req):
     return render(req, 'editprofile.html', {'user_form': user_form, 'student_form': student_form})
 
 
-def create_event_with_attendees(start_time_str, end_time_str, summary, attendees, description=None,Schedule_id=None, location=None):
+def create_google_calendar_event(start_time_str, end_time_str, summary, Lecturer):
     service = get_calendar_service()
 
     event = {
         "summary": summary,
-        "description": description,
-        "location": location,
         "start": {"dateTime": start_time_str, "timeZone": 'Asia/Bangkok'},
         "end": {"dateTime": end_time_str, "timeZone": 'Asia/Bangkok'},
-        "attendees": [{"email": attendee} for attendee in attendees],
+        "email": [{"email": email } for email in Lecturer],
     }
     event_result = service.events().insert(calendarId='primary', body=event, sendNotifications=True).execute()
 
@@ -129,7 +127,7 @@ def get_calendar_service():
             creds.refresh(Request())
         else:
             flow = InstalledAppFlow.from_client_secrets_file(
-                './client_secret_776983342224-8ab8a7lsg5n1a2t5ofdghmt2qi2n10g8.apps.googleusercontent.json', SCOPES)
+                './client_secret_776983342224-8ab8a7lsg5n1a2t5ofdghmt2qi2n10g8.apps.googleusercontent.com.json', SCOPES)
             creds = flow.run_local_server(port=40001)
         with open('token.pkl', 'wb') as token:
             pickle.dump(creds, token)
@@ -138,13 +136,19 @@ def get_calendar_service():
     return service
 
 
-def create_event_with_attendees2(req):
-    start_time = Lecturer
-    end_time = "2024-02-16T12:00:00"
+def create_google_calendar_event2(request):
+    # Assuming checkboxes are named 'lecturers' and each checkbox value contains lecturer ids
+    lecturer_ids_selected = request.POST.getlist('lecturers')
+    
+    # Retrieve the email addresses of selected lecturers
+    emails = Lecturer.objects.filter(id__in=lecturer_ids_selected).values_list('user__email', flat=True)
+    
+    # Assuming create_google_calendar_event is a function to create a Google Calendar event
+    # You should replace this with your actual function to create the event
+    start_time = "2024-04-16T10:00:00"
+    end_time = "2024-04-16T12:00:00"
     summary = "Meeting with Team"
-    attendees = ["pongsapat.ch.64@ubu.ac.th"]
-    description = "Discussion about project progress"
-    location = "Conference Room A"
-    create_event_with_attendees(start_time, end_time, summary, attendees, description, location)
+    create_google_calendar_event(start_time, end_time, summary, emails)
+    
     return redirect('status')
 

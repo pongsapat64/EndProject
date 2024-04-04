@@ -1,0 +1,21 @@
+{% extends 'components/base.html' %}
+
+{% block content %}
+
+<div class="text-center mt-14">
+    <h1 class="text-2xl font-bold">นัดอาจารย์</h1>
+    <form method="post">
+      {% csrf_token %}
+      {% for lecturer in lecturers %}
+        <input type="checkbox" id="{{ lecturer.id }}" name="lecturers" value="{{ lecturer.first_name }}">
+        <label for="{{ lecturer.id }}">{{ lecturer.first_name }} {{ lecturer.user.email }}</label><br>
+      {% endfor %}
+      <br>
+      <!-- <button type="submit" class="rounded-full shadow-sm bg-blue-300 p-2 hover:bg-blue-600 hover:text-white">Submit</button> -->
+      <button type="button" onclick="window.location.href='create_event2'" class="rounded-full shadow-sm bg-blue-300 p-2 hover:bg-blue-600 hover:text-white">Submit</button>
+
+      
+    </form>
+</div>
+
+{% endblock %}

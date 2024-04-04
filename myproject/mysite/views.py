@@ -9,6 +9,7 @@ from django.contrib.auth import (authenticate,
 from django.contrib import messages
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required, user_passes_test
+from allauth.account.auth_backends import AuthenticationBackend
 # Create your views here.
 def is_Lecturer(user):
     if isinstance(user, User):
@@ -55,7 +56,7 @@ def login_view(req):
 
 def logout_view(req):
     logout(req)
-    return redirect('login')
+    return redirect('/')
 
 
 def register(req):

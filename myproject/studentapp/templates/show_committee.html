@@ -3,19 +3,39 @@
 {% block content %}
 
 <div class="text-center mt-14">
-    <h1 class="text-2xl font-bold">นัดอาจารย์</h1>
-    <form method="post">
+  <h1 class="text-2xl font-bold">นัดอาจารย์</h1>
+  <form method="post" action="{% url 'create_event2' %}">
       {% csrf_token %}
       {% for lecturer in lecturers %}
-        <input type="checkbox" id="{{ lecturer.id }}" name="lecturers" value="{{ lecturer.first_name }}">
-        <label for="{{ lecturer.id }}">{{ lecturer.first_name }} {{ lecturer.user.email }}</label><br>
+          <input type="checkbox" id="{{ lecturer.id }}" name="lecturers" value="{{ lecturer.id }}">
+          <label for="{{ lecturer.id }}">{{ lecturer.first_name }} {{ lecturer.user.email }}</label>
+          <br>
       {% endfor %}
       <br>
-      <!-- <button type="submit" class="rounded-full shadow-sm bg-blue-300 p-2 hover:bg-blue-600 hover:text-white">Submit</button> -->
-      <button type="button" onclick="window.location.href='create_event2'" class="rounded-full shadow-sm bg-blue-300 p-2 hover:bg-blue-600 hover:text-white">Submit</button>
-
-      
-    </form>
+      <label for="start_time">เวลาที่เริ่ม:</label>
+      <input type="datetime-local" id="start_time" name="start_time" onchange="updateGoogleCalendarDateTime(this)">
+      <br>
+      <label for="end_time">เวลาที่จบ:</label>
+      <input type="datetime-local" id="end_time" name="end_time" onchange="updateGoogleCalendarDateTime(this)">
+      <br>
+      <label for="summary">เรื่อง:</label>
+      <input type="text" id="summary" name="summary" class="border-2 border-black rounded-lg">
+      <br>
+      <button type="submit" class="rounded-full shadow-sm bg-blue-300 p-2 hover:bg-blue-600 hover:text-white">Submit</button>
+  </form>
 </div>
+
+<script>
+  function convertToHTMLDateTime(googleCalendarDateTime) {
+      var date = new Date(googleCalendarDateTime);
+      var year = date.getFullYear();
+      var month = String(date.getMonth() + 1).padStart(2, '0');
+      var day = String(date.getDate()).padStart(2, '0');
+      var hours = String(date.getHours()).padStart(2, '0');
+      var minutes = String(date.getMinutes()).padStart(2, '0');
+      var seconds = String(date.getSeconds()).padStart(2, '0');
+      return `${year}-${month}-${day}T${hours}:${minutes}:${seconds}`;
+  }
+</script>
 
 {% endblock %}

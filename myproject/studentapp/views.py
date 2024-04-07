@@ -105,17 +105,6 @@ def editprofile(req):
     return render(req, 'editprofile.html', {'user_form': user_form, 'student_form': student_form})
 
 
-def create_google_calendar_event(start_time_str, end_time_str, summary, Lecturer):
-    service = get_calendar_service()
-
-    event = {
-        "summary": summary,
-        "start": {"dateTime": start_time_str, "timeZone": 'Asia/Bangkok'},
-        "end": {"dateTime": end_time_str, "timeZone": 'Asia/Bangkok'},
-        "email": [{"email": email } for email in Lecturer],
-    }
-    event_result = service.events().insert(calendarId='primary', body=event, sendNotifications=True).execute()
-
 SCOPES = ['https://www.googleapis.com/auth/calendar']
 def get_calendar_service():
     creds = None
@@ -136,19 +125,29 @@ def get_calendar_service():
     return service
 
 
+def create_google_calendar_event(start_time_str, end_time_str, summary, Lecturer, description=None, location=None):
+    service = get_calendar_service()
+
+    event = {
+        "summary": summary,
+        "start": {"dateTime": start_time_str, "timeZone": 'Asia/Bangkok'},
+        "end": {"dateTime": end_time_str, "timeZone": 'Asia/Bangkok'},
+        "attendees": [{"email": attendee} for attendee in Lecturer],
+    }
+    event_result = service.events().insert(calendarId='primary', body=event, sendNotifications=True).execute()
+
+
 def create_google_calendar_event2(request):
-    # Assuming checkboxes are named 'lecturers' and each checkbox value contains lecturer ids
-    lecturer_ids_selected = request.POST.getlist('lecturers')
-    
-    # Retrieve the email addresses of selected lecturers
-    emails = Lecturer.objects.filter(id__in=lecturer_ids_selected).values_list('user__email', flat=True)
-    
-    # Assuming create_google_calendar_event is a function to create a Google Calendar event
-    # You should replace this with your actual function to create the event
-    start_time = "2024-04-16T10:00:00"
-    end_time = "2024-04-16T12:00:00"
-    summary = "Meeting with Team"
-    create_google_calendar_event(start_time, end_time, summary, emails)
+    if request.method == 'POST':
+        start_time = request.POST.get('start_time')
+        end_time = request.POST.get('end_time')
+        summary = request.POST.get('summary')
+        print("----->", start_time, end_time, summary, "<-----")
+        lecturer_ids_selected = request.POST.getlist('lecturers')
+        
+        emails = Lecturer.objects.filter(id__in=lecturer_ids_selected).values_list('user__email', flat=True)
+
+        create_google_calendar_event(start_time, end_time, summary, emails)
     
     return redirect('status')
 

@@ -17,6 +17,17 @@ class Adviser(models.Model):
     lecturer = models.ForeignKey(Lecturer, on_delete=models.CASCADE, blank=True, null=True)
     student = models.ForeignKey(Student, on_delete=models.CASCADE, blank=True, null=True)
 
+class Appointment(models.Model):
+    student = models.ForeignKey(Student, on_delete=models.CASCADE)
+    committee = models.ForeignKey(Lecturer, on_delete=models.CASCADE)
+    start_time = models.DateTimeField()
+    end_time = models.DateTimeField()
+    summary = models.CharField(max_length=100)
+
+    def __str__(self):
+        return self.summary
+    
+
 class TimeSlot(models.Model):
     start_time = models.TimeField(blank=True, null=True)
     end_time = models.TimeField(blank=True, null=True)
@@ -35,6 +46,7 @@ class Score(models.Model):
     lecturer = models.ForeignKey(Lecturer, null=True, on_delete=models.CASCADE)
     scored = models.IntegerField(null=True)
     maxscore = models.IntegerField(default=10)
+
 
 class Role(models.Model):
     DEFAULT_ROLES = ['Admin', 'Lecturer', 'Student', 'Adviser', 'Committee']

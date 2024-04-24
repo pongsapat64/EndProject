@@ -2,9 +2,11 @@ from django.http import JsonResponse
 from django.shortcuts import redirect, render
 from django.contrib.auth import (authenticate, login, logout)
 from django.contrib.auth.models import User
-from mysite.models import Score
+from mysite.models import Appointment, Score
 from mysite.views import *
 import calendar
+from django.core.serializers.json import DjangoJSONEncoder
+import json
 from datetime import datetime
 from mysite.forms import *
 from google_auth_oauthlib.flow import InstalledAppFlow
@@ -139,15 +141,41 @@ def create_google_calendar_event(start_time_str, end_time_str, summary, Lecturer
 
 def create_google_calendar_event2(request):
     if request.method == 'POST':
-        start_time = request.POST.get('start_time')
-        end_time = request.POST.get('end_time')
+        start_time_str = request.POST.get('start_time')
+        start_time = start_time_str+":00"
+        end_time_str = request.POST.get('end_time')
+        end_time = end_time_str+":00"
         summary = request.POST.get('summary')
-        print("----->", start_time, end_time, summary, "<-----")
+        print("----->", type(start_time_str), start_time, end_time_str, summary, "<-----")
         lecturer_ids_selected = request.POST.getlist('lecturers')
         
         emails = Lecturer.objects.filter(id__in=lecturer_ids_selected).values_list('user__email', flat=True)
 
         create_google_calendar_event(start_time, end_time, summary, emails)
+
+        student_instance = get_or_create_student_instance(request.user)
+        committee_user = Lecturer.objects.get(id=lecturer_ids_selected[0])
+
+        appointment = Appointment.objects.create(
+            start_time=start_time_str,
+            end_time=end_time_str,
+            summary=summary,
+            # Assuming you have a logged-in user representing the student
+            student=student_instance,
+            # Assuming you need to choose one committee member from the selected lecturers
+            committee=committee_user
+        )
+        appointment.save()
     
     return redirect('status')
 
+
+def get_or_create_student_instance(user):
+    # Check if a Student instance already exists for the given user
+    try:
+        student_instance = Student.objects.get(user=user)
+    except Student.DoesNotExist:
+        # If no Student instance exists, create one
+        student_instance = Student.objects.create(user=user)
+    
+    return student_instance

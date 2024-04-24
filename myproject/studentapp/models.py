@@ -23,13 +23,5 @@ class Student(models.Model):
     def __str__(self):
         return f"{self.first_name} {self.last_name} {self.student_id}"
     
-class Event(models.Model):
-    summary = models.CharField(max_length=100)
-    start_time = models.DateTimeField()
-    end_time = models.DateTimeField()
-
-    def __str__(self):
-        return self.summary
-
 
  

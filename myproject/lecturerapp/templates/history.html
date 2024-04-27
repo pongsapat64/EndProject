@@ -1,9 +1,33 @@
 {% extends 'components/base2.html' %}
 
 {% block content %}
-    <div class="text-center mt-14">
-        <h1 class="text-2xl font-bold">ประวัติการนัด</h1>
-    </div>
+<h1 class="text-3xl font-bold mb-8 text-center py-4">ประวัติการนัด</h1>
+<div class="overflow-x-auto">
+    <table class="w-full border-collapse border border-gray-300 bg-white shadow-md rounded-lg">
+        <thead>
+            <tr class="bg-gray-200">
+                <th class="p-3 text-left">Student</th>
+                <th class="p-3 text-left">Start Time</th>
+                <th class="p-3 text-left">End Time</th>
+                <th class="p-3 text-left">Summary</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for appointment in appointments %}
+            <tr>
+                <td class="p-3">{{ appointment.student.first_name }} {{ appointment.student.last_name }}</td>
+                <td class="p-3">{{ appointment.start_time }}</td>
+                <td class="p-3">{{ appointment.end_time }}</td>
+                <td class="p-3">{{ appointment.summary }}</td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td class="p-3" colspan="5">No appointments found.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
 {% endblock %}
 
 

@@ -1,7 +1,7 @@
 from django.http import HttpResponse, JsonResponse
 from django.shortcuts import redirect, render
 from studentapp.models import Project
-from mysite.models import AvailableTime, Score
+from mysite.models import Appointment, AvailableTime, Score
 from mysite.forms import *
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib.auth.models import User
@@ -83,7 +83,8 @@ def addtime_select(request, year=None, month=None, day=None):
 @user_passes_test(is_Lecturer)
 @login_required(login_url='/mysite/login')
 def history(req):
-    return render(req, "history.html")
+    appointments = Appointment.objects.all()
+    return render(req, 'history.html', {'appointments': appointments})
 
 
 @user_passes_test(is_Lecturer)

@@ -82,9 +82,11 @@ def register(req):
     if req.method == 'POST':
         form = RegisterForm(req.POST)
         if form.is_valid():
-            user = form.save()
+            user = form.save(commit=False)  # Don't save to the database yet
+            user.backend = 'django.contrib.auth.backends.ModelBackend'  # Specify authentication backend
+            user.save()  # Now save the user to the database
             login(req, user)
-            return redirect('login')  
+            return redirect('login')
     else:
         form = RegisterForm()
 

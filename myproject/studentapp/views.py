@@ -79,8 +79,9 @@ def appointment_details(req, year, month, day, start_time, end_time):
 @user_passes_test(is_Student)
 @login_required(login_url='/mysite/login')
 def status(req):
-    appointments = Appointment.objects.select_related('committee').all()
-    return render(req, 'status.html', {'appointments': appointments})
+    students = Student.objects.get(user=req.user)
+    student = Appointment.objects.filter(student=students)
+    return render(req, 'status.html', {'appointments': student})
 
 @user_passes_test(is_Student)
 @login_required(login_url='/mysite/login')

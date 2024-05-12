@@ -1,7 +1,11 @@
 from django.db import IntegrityError
 from django.http import HttpResponse
-from django.shortcuts import redirect, render
-from mysite.models import Lecturer
+from django.shortcuts import get_object_or_404, redirect, render
+from google.oauth2 import id_token
+from django.conf import settings
+from google.auth.transport import requests
+from studentapp.models import Project, Student
+from mysite.models import Adviser, Appointment, Lecturer
 from mysite.forms import LoginForm, RegisterForm, UserCreateForm, UserProfileForm
 from django.contrib.auth import (authenticate, 
                                  login, 
@@ -52,6 +56,21 @@ def login_view(req):
         form = LoginForm()
 
     return render(req, 'login.html', {'form': form})
+
+def google_login(req):
+    # Redirect the user to Google's authentication page
+    # Implement your Google OAuth URL here
+    google_auth_url = 'https://accounts.google.com/o/oauth2/auth?response_type=code&client_id=776983342224-8ab8a7lsg5n1a2t5ofdghmt2qi2n10g8.apps.googleusercontent.com&redirect_uri=http://127.0.0.1:8000/google/callback&scope=email%20profile&access_type=offline'
+    return redirect(google_auth_url)
+
+
+def google_callback(req):
+    # Handle the callback from Google after authentication
+    # Check if the error is "AuthAlreadyAssociated"
+    error = req.GET.get('error')
+    if error == 'AuthAlreadyAssociated':
+        # Redirect to the regular login page with an error message
+        return redirect('/login/?error=google_already_associated')
 
 
 def logout_view(req):
@@ -105,3 +124,34 @@ def delete_user(req, id):
     user = User.objects.get(pk=id)
     user.delete()
     return redirect('read') 
+
+def create_adviser(req):
+    if req.method == 'POST':
+        lecturer_id = req.POST.get('lecturer')
+        student_id = req.POST.get('student')
+        lecturer = Lecturer.objects.get(id=lecturer_id)
+        student = Student.objects.get(id=student_id)
+        adviser = Adviser.objects.create(lecturer=lecturer, student=student)
+        return redirect('read')
+    else:
+        lecturers = Lecturer.objects.all()
+        students = Student.objects.all()
+        return render(req, 'create_adviser.html', {'lecturers': lecturers, 'students': students})
+    
+
+def show_appoinment(req):
+    appointment = Appointment.objects.all()
+    return render(req, 'show_appoinment.html', {'appointment':appointment})
+
+
+def add_adviser_to_appointment(request, appointment_id):
+    appointment = get_object_or_404(Appointment, pk=appointment_id)
+    if request.method == 'POST':
+        adviser_id = request.POST.get('adviser')
+        adviser = get_object_or_404(Adviser, pk=adviser_id)
+        appointment.adviser = adviser
+        appointment.save()
+        return redirect('show_appoinment')
+    
+    advisers = Adviser.objects.all()
+    return render(request, 'add_adviser_to_appointment.html', {'appointment': appointment, 'advisers': advisers})

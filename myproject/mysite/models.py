@@ -17,9 +17,13 @@ class Adviser(models.Model):
     lecturer = models.ForeignKey(Lecturer, on_delete=models.CASCADE, blank=True, null=True)
     student = models.ForeignKey(Student, on_delete=models.CASCADE, blank=True, null=True)
 
+    def __str__(self):
+        return f"Adviser: {self.lecturer} - {self.student}"
+
 class Appointment(models.Model):
     student = models.ForeignKey(Student, on_delete=models.CASCADE)
     committee = models.ForeignKey(Lecturer, on_delete=models.CASCADE)
+    adviser = models.ForeignKey(Adviser, on_delete=models.CASCADE, blank=True, null=True)
     start_time = models.DateTimeField()
     end_time = models.DateTimeField()
     summary = models.CharField(max_length=100)

@@ -1,7 +1,8 @@
 from django.http import JsonResponse
-from django.shortcuts import redirect, render
+from django.shortcuts import get_object_or_404, redirect, render
 from django.contrib.auth import (authenticate, login, logout)
 from django.contrib.auth.models import User
+from studentapp.models import Project
 from mysite.models import Appointment, Score
 from mysite.views import *
 import calendar
@@ -28,7 +29,8 @@ def is_Student(user):
 
 def show_committee(req):
     lecturers = Lecturer.objects.all()
-    return render(req, 'show_committee.html', {'lecturers': lecturers})
+    advisers = Adviser.objects.all()
+    return render(req, 'show_committee.html', {'lecturers': lecturers, 'adviser':advisers})
     
 
 @user_passes_test(is_Student)
@@ -157,6 +159,7 @@ def create_google_calendar_event2(request):
         student_instance = get_or_create_student_instance(request.user)
         committee_user = Lecturer.objects.get(id=lecturer_ids_selected[0])
 
+
         appointment = Appointment.objects.create(
             start_time=start_time_str,
             end_time=end_time_str,
@@ -180,3 +183,30 @@ def get_or_create_student_instance(user):
         student_instance = Student.objects.create(user=user)
     
     return student_instance
+
+
+def create_project(request):
+    if request.method == 'POST':
+        topic = request.POST.get('topic')
+        document = request.POST.get('document')
+        presentationSlide = request.POST.get('presentationSlide')
+        year = request.POST.get('year')
+        
+        # Save project to the database
+        Project.objects.create(
+            user=request.user,
+            topic=topic,
+            document=document,
+            presentationSlide=presentationSlide,
+            year=year
+        )
+        
+        # Redirect to the project detail page
+        return redirect('status')
+    
+    return render(request, 'create_project.html')
+
+
+def project_detail(req):
+    projects = Project.objects.filter(user=req.user)
+    return render(req, 'project_detail.html', {'projects': projects})

@@ -7,13 +7,26 @@
   <form method="post" action="{% url 'create_event2' %}" class="max-w-md mx-auto p-8 bg-white rounded-lg shadow-md">
       {% csrf_token %}
       <div class="mb-6">
+        <label for="lecturers" class="block text-sm mb-2">กรรมการ:</label>
         {% for lecturer in lecturers %}
           <div class="flex items-center mb-2">
-            <input type="checkbox" id="{{ lecturer.id }}" name="lecturers" value="{{ lecturer.id }}" class="mr-2">
-            <label for="{{ lecturer.id }}" class="text-sm">{{ lecturer.first_name }} {{ lecturer.user.email }}</label>
+              <input type="checkbox" id="lecturer_{{ lecturer.id }}" name="lecturers" value="{{ lecturer.id }}" class="mr-2">
+              <label for="lecturer_{{ lecturer.id }}" class="text-sm">{{ lecturer.first_name }} {{ lecturer.user.email }}</label>
           </div>
         {% endfor %}
       </div>
+
+      <div class="mb-6">
+        <label for="advisers" class="block text-sm mb-2">ที่ปรึกษา:</label>
+        {% for lecturer in lecturers %}
+          <div class="flex items-center mb-2">
+              <input type="checkbox" id="adviser_{{ lecturer.id }}" name="advisers" value="{{ lecturer.id }}" class="mr-2">
+              <label for="adviser_{{ lecturer.id }}" class="text-sm">{{ lecturer.first_name }} {{ lecturer.user.email }}</label>
+          </div>
+        {% endfor %}
+      </div>
+      
+    
       <div class="mb-6">
         <label for="start_time" class="block text-sm mb-2">Start Time:</label>
         <input type="datetime-local" id="start_time" name="start_time" onchange="updateGoogleCalendarDateTime(this)" class="w-full border border-gray-300 rounded-lg p-2">

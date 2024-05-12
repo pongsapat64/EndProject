@@ -1,5 +1,5 @@
 from django.http import HttpResponse, JsonResponse
-from django.shortcuts import redirect, render
+from django.shortcuts import get_object_or_404, redirect, render
 from studentapp.models import Project
 from mysite.models import Appointment, AvailableTime, Score
 from mysite.forms import *
@@ -18,7 +18,8 @@ def is_Lecturer(user):
 @user_passes_test(is_Lecturer)
 @login_required(login_url='/mysite/login')
 def mainpage(req):
-    return render(req, "mainpage.html")
+    appointments = Appointment.objects.select_related('committee', 'adviser').all()
+    return render(req, "mainpage.html", {'appointments': appointments})
 
 
 @user_passes_test(is_Lecturer)
@@ -120,5 +121,7 @@ user_passes_test(is_Lecturer)
 def show_student(req):
     student = Student.objects.all()
     return render(req, 'showstudents.html', {'student':student})
+
+
 
     

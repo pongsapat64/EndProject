@@ -1,7 +1,9 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
-from .models import Lecturer, Role, TimeSlot
+
+from django.contrib import admin
+from .models import Adviser, Lecturer, Role, TimeSlot
 from studentapp.models import Student
 
 
@@ -57,3 +59,15 @@ class TimeSlotForm(forms.Form):
         super(TimeSlotForm, self).__init__(*args, **kwargs)
         self.fields['time_slot'].choices = time_choices
 
+class AdviserAdminForm(forms.ModelForm):
+    class Meta:
+        model = Adviser
+        fields = '__all__'
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['lecturer'].queryset = Lecturer.objects.all()  # ตั้งค่า queryset ของ lecturer เพื่อให้ admin เลือก
+
+class AdviserAdmin(admin.ModelAdmin):
+    form = AdviserAdminForm
+    list_display = ['lecturer', 'student']

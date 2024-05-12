@@ -11,6 +11,8 @@ urlpatterns = [
     path('create_event', views.create_google_calendar_event, name='create_event'),
     path('create_event2', views.create_google_calendar_event2, name='create_event2'),
     path('appointment', views.appointment, name='appo'),
+    path('create_project', views.create_project, name='create_project'),
+    path('project_detail', views.project_detail, name='project_detail'),
 ]
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

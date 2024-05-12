@@ -3,11 +3,19 @@
 {% block content %}
 <div class="text-center mt-14 grid justify-items-stretch">
     <h1 class="text-2xl font-bold">หน้าหลัก</h1>
-    <p>ยังไม่มีการนำเสนอ</p>
     <div class="box my-4 bg-blue-100 w-2/3 justify-self-center rounded-md shadow">
-        <div>
-            <p class="p-64">ยังไม่มีการนำเสนอ</p>
+        {% for appointment in appointments %}
+        <div class="border border-gray-300 rounded-lg shadow-md p-4 bg-blue-100 mx-auto">
+            <h2 class="text-xl font-semibold mb-2">{{ appointment.student.first_name }} {{ appointment.student.last_name }}</h2>
+            <p><strong>Committee:</strong> {{ appointment.committee.first_name }} {{ appointment.committee.last_name }}</p>
+            {% if appointment.adviser %}
+                <p><strong>Adviser Lecturer:</strong> {{ appointment.adviser.lecturer.first_name }} {{ appointment.adviser.lecturer.last_name }}</p>
+            {% endif %}
+            <p><strong>Start Time:</strong> {{ appointment.start_time }}</p>
+            <p><strong>End Time:</strong> {{ appointment.end_time }}</p>
+            <p><strong>Summary:</strong> {{ appointment.summary }}</p>
         </div>
+        {% endfor %}
     </div>
 </div>
 {% endblock %}

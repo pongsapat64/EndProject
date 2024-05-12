@@ -165,3 +165,8 @@ AUTHENTICATION_BACKENDS = (
     "allauth.account.auth_backends.AuthenticationBackend",
     "social_core.backends.google.GoogleOAuth2",
 )
+
+
+SOCIAL_AUTH_PIPELINE = (
+'social_core.pipeline.user.user_details',
+)

@@ -6,20 +6,20 @@
     <title>User List</title>
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
 </head>
-<body class="bg-blue-100 py-12 px-4">
+<body class="bg-blue-200 py-12 px-4">
     <div class="bg-white p-6 rounded-lg shadow-md max-w-4xl mx-auto">
-        <h1 class="text-3xl font-bold mb-4">User List</h1>
-        <a href="http://127.0.0.1:8000/admin" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded inline-block mb-4">Go to admin</a>
-        <a href="{% url 'create' %}" class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded inline-block mb-4">Create</a>
-        <a href="{% url 'create_adviser' %}" class="bg-yellow-500 hover:bg-yellow-700 text-white font-bold py-2 px-4 rounded inline-block mb-4">Create Adviser</a>
-        <a href="{% url 'show_appoinment' %}" class="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded inline-block mb-4">Show Appoinment</a>
+        <h1 class="text-3xl font-bold mb-4">รายชื่อผู้ใช้</h1>
+        <a href="http://127.0.0.1:8000/admin" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded inline-block mb-4">ไปหน้า Django Admin</a>
+        <a href="{% url 'create' %}" class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded inline-block mb-4">สร้างผู้ใช้</a>
+        <a href="{% url 'create_adviser' %}" class="bg-yellow-500 hover:bg-yellow-700 text-white font-bold py-2 px-4 rounded inline-block mb-4">เลือกที่ปรึกษาให้นักศึกษา</a>
+        <a href="{% url 'show_appoinment' %}" class="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded inline-block mb-4">แสดงการนัดทั้งหมด</a>
         <table class="w-full border-collapse border border-gray-300">
             <thead>
                 <tr>
-                    <th class="border border-gray-300 px-4 py-2">ID</th>
-                    <th class="border border-gray-300 px-4 py-2">Username</th>
-                    <th class="border border-gray-300 px-4 py-2">Email</th>
-                    <th class="border border-gray-300 px-4 py-2">Action</th>
+                    <th class="border border-gray-300 px-4 py-2">ไอดี</th>
+                    <th class="border border-gray-300 px-4 py-2">ชื่อผู้ใช้</th>
+                    <th class="border border-gray-300 px-4 py-2">อีเมล</th>
+                    <th class="border border-gray-300 px-4 py-2">ตัวเลือก</th>
                 </tr>
             </thead>
             <tbody>
@@ -29,8 +29,8 @@
                     <td class="border border-gray-300 px-4 py-2">{{ u.username }}</td>
                     <td class="border border-gray-300 px-4 py-2">{{ u.email }}</td>
                     <td class="border border-gray-300 px-4 py-2">
-                        <a href="/update/{{ u.id }}" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-2 rounded inline-block">UPDATE</a>
-                        <a href="/delete/{{ u.id }}" class="bg-red-500 hover:bg-red-700 text-white font-bold py-1 px-2 rounded inline-block">DELETE</a>
+                        <a href="/update/{{ u.id }}" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-2 rounded inline-block">แก้ไขผู้ใช้</a>
+                        <a href="/delete/{{ u.id }}" class="bg-red-500 hover:bg-red-700 text-white font-bold py-1 px-2 rounded inline-block">ลบผู้ใช้</a>
                     </td>
                 </tr>
                 {% endfor %}

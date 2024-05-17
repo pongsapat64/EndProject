@@ -18,8 +18,13 @@ def is_Lecturer(user):
 @user_passes_test(is_Lecturer)
 @login_required(login_url='/mysite/login')
 def mainpage(req):
-    appointments = Appointment.objects.select_related('committee', 'adviser').all()
-    return render(req, "mainpage.html", {'appointments': appointments})
+    lecturers = Lecturer.objects.get(user=req.user)
+    lecturer = Appointment.objects.filter(committee=lecturers)
+    return render(req, "mainpage.html", {'appointments': lecturer})
+
+    students = Student.objects.get(user=req.user)
+    student = Appointment.objects.filter(student=students)
+    return render(req, 'status.html', {'appointments': student})
 
 
 @user_passes_test(is_Lecturer)

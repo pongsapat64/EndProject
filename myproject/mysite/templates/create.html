@@ -6,9 +6,9 @@
     <title>Create</title>
     <script src="https://cdn.tailwindcss.com?plugins=forms,typography,aspect-ratio,line-clamp"></script>
 </head>
-<body class="bg-blue-100 flex justify-center items-center h-screen">
+<body class="bg-blue-200 flex justify-center items-center h-screen">
     <div class="bg-white p-6 rounded-lg shadow-md w-full max-w-md">
-        <h1 class="text-3xl font-bold mb-6">Create</h1>
+        <h1 class="text-3xl font-bold mb-6">สร้างผู้ใช้</h1>
         <form action="{% url 'create' %}" method="post" enctype="multipart/form-data">
             {% csrf_token %}
             <div class="mb-4">
@@ -25,14 +25,14 @@
             </div>
             <div class="flex items-center mb-4">
                 <input type="checkbox" id="id_is_student" name="is_student" class="mr-2">
-                <label for="id_is_student" class="text-md">is Student</label>
+                <label for="id_is_student" class="text-md">นี่คือนักศึกษา</label>
             </div>
             <div class="flex items-center mb-4">
                 <input type="checkbox" id="id_is_lecturer" name="is_lecturer" class="mr-2">
-                <label for="id_is_lecturer" class="text-md">is Lecturer</label>
+                <label for="id_is_lecturer" class="text-md">นี่คืออาจารย์</label>
             </div>
 
-            <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Submit</button>
+            <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">ยืนยัน</button>
         </form>
     </div>
 </body>

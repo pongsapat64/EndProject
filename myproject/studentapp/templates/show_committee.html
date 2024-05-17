@@ -14,18 +14,7 @@
               <label for="lecturer_{{ lecturer.id }}" class="text-sm">{{ lecturer.first_name }} {{ lecturer.user.email }}</label>
           </div>
         {% endfor %}
-      </div>
-
-      <div class="mb-6">
-        <label for="advisers" class="block text-sm mb-2">ที่ปรึกษา:</label>
-        {% for lecturer in lecturers %}
-          <div class="flex items-center mb-2">
-              <input type="checkbox" id="adviser_{{ lecturer.id }}" name="advisers" value="{{ lecturer.id }}" class="mr-2">
-              <label for="adviser_{{ lecturer.id }}" class="text-sm">{{ lecturer.first_name }} {{ lecturer.user.email }}</label>
-          </div>
-        {% endfor %}
-      </div>
-      
+      </div>     
     
       <div class="mb-6">
         <label for="start_time" class="block text-sm mb-2">Start Time:</label>

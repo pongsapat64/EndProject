@@ -52,10 +52,13 @@ def login_view(req):
                     return redirect('status') 
             else:
                 messages.error(req, 'Invalid username or password.')
+        else:
+            messages.error(req, 'Please fill in all the required fields.')
     else:
         form = LoginForm()
 
     return render(req, 'login.html', {'form': form})
+
 
 def google_login(req):
     # Redirect the user to Google's authentication page

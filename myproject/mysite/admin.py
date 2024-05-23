@@ -5,7 +5,6 @@ from .models import *
 admin.site.register(Student)
 admin.site.register(Lecturer)
 admin.site.register(Adviser)
-admin.site.register(TimeSlot)
 admin.site.register(AvailableTime)
 admin.site.register(Score)
 admin.site.register(Project)

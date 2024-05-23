@@ -22,10 +22,6 @@ def mainpage(req):
     lecturer = Appointment.objects.filter(committee=lecturers)
     return render(req, "mainpage.html", {'appointments': lecturer})
 
-    students = Student.objects.get(user=req.user)
-    student = Appointment.objects.filter(student=students)
-    return render(req, 'status.html', {'appointments': student})
-
 
 @user_passes_test(is_Lecturer)
 @login_required(login_url='/mysite/login')
@@ -49,6 +45,8 @@ def get_freetime(req):
 
     return JsonResponse(events, safe=False)
 
+@user_passes_test(is_Lecturer)
+@login_required(login_url='/mysite/login')
 def create_freetime(req):
     if req.method == 'POST':
         lecturer = req.user.lecturer  # สมมติว่ามีการสร้าง field lecturer ในโมเดล Lecturer
@@ -75,6 +73,18 @@ def create_freetime(req):
     else:
         return render(req, 'addthetime.html')
 
+@user_passes_test(is_Lecturer)
+@login_required(login_url='/mysite/login')    
+def showAvailableTime(req):
+    avt = AvailableTime.objects.all()
+    return render(req, 'showavt.html', {'show':avt})
+
+
+def deleteAvailableTime(req, id):
+    avt = AvailableTime.objects.get(pk=id)
+    avt.delete()
+    return redirect('showavt') 
+
 
 @user_passes_test(is_Lecturer)
 @login_required(login_url='/mysite/login')
@@ -95,19 +105,19 @@ def history(req):
 
 @user_passes_test(is_Lecturer)
 @login_required(login_url='/mysite/login')
-def editprofile(req):
-    user_form = UserProfileForm(instance=req.user)
-    lecturer_form = LecturerProfileForm(instance=req.user.lecturer)
-
+def profileLec(req):
     if req.method == 'POST':
-        user_form = UserProfileForm(req.POST, instance=req.user)
-        lecturer_form = LecturerProfileForm(req.POST, instance=req.user.lecturer)
-        if user_form.is_valid() and lecturer_form.is_valid():
-            user_form.save()
-            lecturer_form.save()
-            return redirect('editlec')
-    
-    return render(req, 'editprofileLec.html', {'user_form': user_form, 'lecturer_form': lecturer_form})
+        user = req.user
+        user.lecturer.first_name = req.POST.get('first_name')
+        user.lecturer.last_name = req.POST.get('last_name')
+        user.lecturer.email = req.POST.get('email')
+        
+        user.save()
+        user.lecturer.save()
+        
+        return redirect('profileLec')
+        
+    return render(req, 'profileLec.html')
 
 user_passes_test(is_Lecturer)
 @login_required(login_url='/mysite/login')

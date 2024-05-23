@@ -30,12 +30,6 @@ class Appointment(models.Model):
 
     def __str__(self):
         return self.summary
-    
-
-class TimeSlot(models.Model):
-    start_time = models.TimeField(blank=True, null=True)
-    end_time = models.TimeField(blank=True, null=True)
-    date = models.DateField(blank=True, null=True)
 
 
 class AvailableTime(models.Model):

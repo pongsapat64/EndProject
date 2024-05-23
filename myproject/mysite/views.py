@@ -4,8 +4,9 @@ from django.shortcuts import get_object_or_404, redirect, render
 from google.oauth2 import id_token
 from django.conf import settings
 from google.auth.transport import requests
+from django.contrib.auth.hashers import make_password
 from studentapp.models import Project, Student
-from mysite.models import Adviser, Appointment, Lecturer
+from mysite.models import Adviser, Appointment, Lecturer, Role
 from mysite.forms import LoginForm, RegisterForm, UserCreateForm, UserProfileForm
 from django.contrib.auth import (authenticate, 
                                  login, 
@@ -47,33 +48,18 @@ def login_view(req):
                 if is_admin(user):
                     return redirect('read')
                 elif is_Lecturer(user):
-                    return redirect('main')  
+                    return redirect('profileLec')  
                 elif is_Student(user):
-                    return redirect('status') 
+                    return redirect('profile') 
             else:
-                messages.error(req, 'Invalid username or password.')
+                messages.error(req, 'ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง!.')
         else:
-            messages.error(req, 'Please fill in all the required fields.')
+            messages.error(req, 'กรุณากรอกข้อมูลในทุกช่องที่จำเป็น!')
     else:
         form = LoginForm()
 
     return render(req, 'login.html', {'form': form})
 
-
-def google_login(req):
-    # Redirect the user to Google's authentication page
-    # Implement your Google OAuth URL here
-    google_auth_url = 'https://accounts.google.com/o/oauth2/auth?response_type=code&client_id=776983342224-8ab8a7lsg5n1a2t5ofdghmt2qi2n10g8.apps.googleusercontent.com&redirect_uri=http://127.0.0.1:8000/google/callback&scope=email%20profile&access_type=offline'
-    return redirect(google_auth_url)
-
-
-def google_callback(req):
-    # Handle the callback from Google after authentication
-    # Check if the error is "AuthAlreadyAssociated"
-    error = req.GET.get('error')
-    if error == 'AuthAlreadyAssociated':
-        # Redirect to the regular login page with an error message
-        return redirect('/login/?error=google_already_associated')
 
 
 def logout_view(req):
@@ -90,6 +76,8 @@ def register(req):
             user.save()  # Now save the user to the database
             login(req, user)
             return redirect('login')
+        else:
+            messages.error(req, 'กรุณากรอกข้อมูลในทุกช่องที่จำเป็น!')
     else:
         form = RegisterForm()
 
@@ -105,14 +93,20 @@ def create_user(req):
         form = UserCreateForm(req.POST)
         if form.is_valid():
             username = form.cleaned_data['username']
+            password = form.cleaned_data['password']
             if not User.objects.filter(username=username).exists():
-                form.save()
+                # สร้างผู้ใช้ใหม่
+                user = form.save(commit=False)
+                # กำหนดรหัสผ่านให้กับผู้ใช้และเข้ารหัสรหัสผ่าน
+                user.password = make_password(password)
+                user.save()
                 return redirect('read')
             else:
-                return HttpResponse("Username is already taken.")
+                return HttpResponse("ชื่อผู้ใช้ถูกใช้แล้ว.")
     else:
         form = UserCreateForm()
     return render(req, 'create.html', {'form': form})
+
 
 def update_user(request, id):
     user = User.objects.get(pk=id)

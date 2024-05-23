@@ -1,0 +1,53 @@
+{% extends 'components/base2.html' %}
+
+{% block content %}
+<style>
+    .hidden {
+        display: none;
+    }
+</style>
+<h1 class="text-2xl text-center font-bold mt-16">ข้อมูลส่วนตัว</h1>
+<div class="mb-4 pt-16 pb-16 mx-auto max-w-lg bg-blue-200 rounded-md mt-16 drop-shadow-md">
+    <div id="view-mode" class="text-center bg-white py-2 w-2/3 ml-[2.3cm] rounded-md drop-shadow-md">
+        <p>ชื่อ : {{ user.lecturer.first_name }}</p>
+        <p>นามสกุล : {{ user.lecturer.last_name }}</p>
+        <p>อีเมล : {{ user.email }}</p>
+        <button id="edit-button" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mt-4">แก้ไขข้อมูล</button>
+    </div>
+    <div id="edit-mode" class="hidden">
+        <form action="{% url 'profileLec' %}" method="post" class="space-y-4 ">
+            {% csrf_token %}
+            <div class="ml-36">
+                <label for="first_name" class="block text-sm font-medium text-gray-700">ชื่อ</label>
+                <input type="text" name="first_name" value="{{ user.lecturer.first_name }}" class="mt-1 pr-10 block border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 md:text-md">
+            </div>
+            <div class="ml-36">
+                <label for="last_name" class="block text-sm font-medium text-gray-700">นามสกุล</label>
+                <input type="text" name="last_name" value="{{ user.lecturer.last_name }}" class="mt-1 pr-10 block border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 md:text-md">
+            </div>
+            <div class="ml-36">
+                <label for="email" class="block text-sm font-medium text-gray-700">อีเมล</label>
+                <input type="email" name="email" value="{{ user.email }}" class="mt-1 pr-10 block border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 md:text-md">
+            </div>
+            <div class="flex space-x-4 justify-center">
+                <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">บันทึกข้อมูล</button>
+                <button type="button" id="cancel-button" class="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded">ยกเลิก</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    document.getElementById('edit-button').addEventListener('click', function() {
+        document.getElementById('view-mode').classList.add('hidden');
+        document.getElementById('edit-mode').classList.remove('hidden');
+    });
+
+    document.getElementById('cancel-button').addEventListener('click', function() {
+        document.getElementById('view-mode').classList.remove('hidden');
+        document.getElementById('edit-mode').classList.add('hidden');
+    });
+</script>
+{% endblock %}
+
+

@@ -12,6 +12,13 @@
         <form method="post" action="register" class="w-full p-6 bg-white rounded-md shadow-md">
             <h1 class="text-3xl font-bold mb-4 text-gray-700 text-center mx-12">สมัครสมาชิก</h1>
             {% csrf_token %}
+            {% if messages %}
+              <div class="mb-4">
+                  {% for message in messages %}
+                      <p class="text-red-500 text-sm italic">{{ message }}</p>
+                  {% endfor %}
+              </div>
+            {% endif %}
             <div class="mb-4">
                 <label class="block text-gray-700 text-md mb-2" for="{{ form.username.id_for_label }}">Username:</label>
                 <input type="text" name="username" class="border-2 border-black rounded-md pr-28" placeholder="Username">

@@ -27,28 +27,6 @@
                     </div>
                     <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">Add Time</button>
                 </form>
-                <div id="message" class="text-green-500"></div>
-
-                <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-                <script>
-                    $(document).ready(function(){
-                        $('#add-time-form').submit(function(event){
-                            event.preventDefault();
-                            $.ajax({
-                                type: 'POST',
-                                url: '{% url "addthetime" %}',
-                                data: $(this).serialize(),
-                                dataType: 'json',
-                                success: function(response){
-                                    $('#message').text(response.message);
-                                },
-                                error: function(xhr, errmsg, err){
-                                    $('#message').text('สำเร็จ');
-                                }
-                            });
-                        });
-                    });
-                </script>
             {% endif %}
         {% endif %}
     </div>

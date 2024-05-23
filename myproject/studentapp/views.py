@@ -79,9 +79,9 @@ def appointment_details(req, year, month, day, start_time, end_time):
 @user_passes_test(is_Student)
 @login_required(login_url='/mysite/login')
 def status(req):
-    students = Student.objects.get(user=req.user)
-    student = Appointment.objects.filter(student=students)
-    return render(req, 'status.html', {'appointments': student})
+    student = Student.objects.get(user=req.user)
+    appointments = Appointment.objects.filter(student=student)
+    return render(req, 'status.html', {'appointments': appointments})
 
 @user_passes_test(is_Student)
 @login_required(login_url='/mysite/login')
@@ -96,22 +96,26 @@ def score(req):
 
 @user_passes_test(is_Student)
 @login_required(login_url='/mysite/login')
-def editprofile(req):
-    user_form = UserProfileForm(instance=req.user)
-    student_form = StudentProfileForm(instance=req.user.student)
-
+def profile(req):
     if req.method == 'POST':
-        user_form = UserProfileForm(req.POST, instance=req.user)
-        student_form = StudentProfileForm(req.POST, instance=req.user.student)
-        if user_form.is_valid() and student_form.is_valid():
-            user_form.save()
-            student_form.save()
-            return redirect('edit')
-    
-    return render(req, 'editprofile.html', {'user_form': user_form, 'student_form': student_form})
+        user = req.user
+        user.first_name = req.POST.get('first_name')
+        user.last_name = req.POST.get('last_name')
+        user.email = req.POST.get('email')
+        user.student.student_id = req.POST.get('student_id')
+        user.student.subject = req.POST.get('subject')
+        
+        user.save()
+        user.student.save()
+        
+        return redirect('profile')
+        
+    return render(req, 'profile.html')
+
 
 
 SCOPES = ['https://www.googleapis.com/auth/calendar']
+
 def get_calendar_service():
     creds = None
     if os.path.exists('token.pkl'):
@@ -131,43 +135,50 @@ def get_calendar_service():
     return service
 
 
-def create_google_calendar_event(start_time_str, end_time_str, summary, Lecturer, description=None, location=None):
+def create_google_calendar_event(start_time_str, end_time_str, summary, lecturers_emails, description=None, location=None):
     service = get_calendar_service()
 
     event = {
         "summary": summary,
         "start": {"dateTime": start_time_str, "timeZone": 'Asia/Bangkok'},
         "end": {"dateTime": end_time_str, "timeZone": 'Asia/Bangkok'},
-        "attendees": [{"email": attendee} for attendee in Lecturer],
+        "attendees": [{"email": email} for email in lecturers_emails],
     }
     event_result = service.events().insert(calendarId='primary', body=event, sendNotifications=True).execute()
 
 
+
+@user_passes_test(is_Student)
+@login_required(login_url='/mysite/login')
 def create_google_calendar_event2(request):
     if request.method == 'POST':
         start_time_str = request.POST.get('start_time')
-        start_time = start_time_str+":00"
+        start_time = start_time_str + ":00"
         end_time_str = request.POST.get('end_time')
-        end_time = end_time_str+":00"
+        end_time = end_time_str + ":00"
         summary = request.POST.get('summary')
-        print("----->", type(start_time_str), start_time, end_time_str, summary, "<-----")
+        
         lecturer_ids_selected = request.POST.getlist('lecturers')
         
+        # Get emails of selected lecturers
         emails = Lecturer.objects.filter(id__in=lecturer_ids_selected).values_list('user__email', flat=True)
 
-        create_google_calendar_event(start_time, end_time, summary, emails)
+        # Add current user's email as organizer
+        current_user_email = request.user.email
 
+        # Send invitation to selected lecturers
+        for email in emails:
+            create_google_calendar_event(start_time, end_time, summary, [email, current_user_email])
+
+        # Create Appointment instance
         student_instance = get_or_create_student_instance(request.user)
         committee_user = Lecturer.objects.get(id=lecturer_ids_selected[0])
-
 
         appointment = Appointment.objects.create(
             start_time=start_time_str,
             end_time=end_time_str,
             summary=summary,
-            # Assuming you have a logged-in user representing the student
             student=student_instance,
-            # Assuming you need to choose one committee member from the selected lecturers
             committee=committee_user
         )
         appointment.save()
@@ -185,7 +196,8 @@ def get_or_create_student_instance(user):
     
     return student_instance
 
-
+@user_passes_test(is_Student)
+@login_required(login_url='/mysite/login')
 def create_project(request):
     if request.method == 'POST':
         topic = request.POST.get('topic')
@@ -207,7 +219,8 @@ def create_project(request):
     
     return render(request, 'create_project.html')
 
-
+@user_passes_test(is_Student)
+@login_required(login_url='/mysite/login')
 def project_detail(req):
     projects = Project.objects.filter(user=req.user)
     return render(req, 'project_detail.html', {'projects': projects})

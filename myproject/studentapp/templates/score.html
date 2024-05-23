@@ -3,19 +3,21 @@
 {% block content %}
 
 <div class="text-center mt-14">
-    {% for s in score %}
-    <h1 class="text-2xl font-bold">คะแนน</h1>
-    <div class="rounded-md drop-shadow-md w-60 flex mx-auto justify-center bg-blue-50">
-        <div>
-            <p>คะแนนที่ได้</p>
-            <div class="pt-4 py-4">
-                <p class="rounded-full bg-blue-200 p-14 w-34 text-3xl font-bold drop-shadow-sm">{{ s.scored }}</p>
+    {% if score %}
+        {% for s in score %}
+        <h1 class="text-2xl font-bold">คะแนน</h1>
+        <div class="rounded-md drop-shadow-md w-60 flex mx-auto justify-center bg-blue-50">
+            <div>
+                <p>คะแนนที่ได้</p>
+                <div class="pt-4 py-4">
+                    <p class="rounded-full bg-blue-200 p-14 w-34 text-3xl font-bold drop-shadow-sm">{{ s.scored }}</p>
+                </div>
             </div>
         </div>
-    </div>
-
-
-    {% endfor %}
+        {% endfor %}
+    {% else %}
+        <p class="text-xl font-bold">ไม่มีคะแนน</p>
+    {% endif %}
 </div>
 
 {% endblock %}

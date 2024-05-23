@@ -3,7 +3,7 @@ from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 
 from django.contrib import admin
-from .models import Adviser, Lecturer, Role, TimeSlot
+from .models import Adviser, Lecturer, Role
 from studentapp.models import Student
 
 
@@ -37,7 +37,7 @@ class LecturerProfileForm(forms.ModelForm):
 class StudentProfileForm(forms.ModelForm):
     class Meta:
         model = Student
-        fields = ('first_name', "last_name", "student_id")
+        fields = ('first_name', "last_name", "student_id", "subject")
 
 class RegisterForm(UserCreationForm):
     class Meta:

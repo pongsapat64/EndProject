@@ -14,11 +14,11 @@ class Project(models.Model):
         return f' topic:{self.topic} document:{self.document} slide:{self.presentationSlide} year:{self.year}'
 
 class Student(models.Model):
-    student_project = models.ForeignKey(Project, on_delete=models.DO_NOTHING, null=True, blank=True)
-    student_id = models.CharField(max_length=11, null=True, blank=True)
-    first_name = models.CharField(max_length=100)
-    last_name = models.CharField(max_length=100)
-    subject = models.CharField(max_length=100)
+    student_project = models.ForeignKey(Project, on_delete=models.CASCADE, null=True, blank=True)
+    student_id = models.IntegerField(max_length=11, null=True, blank=True)
+    first_name = models.CharField(max_length=100, null=True, blank=True)
+    last_name = models.CharField(max_length=100, null=True, blank=True)
+    subject = models.CharField(max_length=100, null=True, blank=True)
     user = models.OneToOneField(User, on_delete=models.CASCADE, null=True)
 
     def __str__(self):

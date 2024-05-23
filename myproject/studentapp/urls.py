@@ -6,7 +6,7 @@ from django.conf.urls.static import static
 urlpatterns = [
     path('status', views.status, name='status'),
     path('score', views.score, name='score'),
-    path('editprofile', views.editprofile, name='edit'),
+    path('profile', views.profile, name='profile'),
     path('show_committee', views.show_committee, name='show_committee'),
     path('create_event', views.create_google_calendar_event, name='create_event'),
     path('create_event2', views.create_google_calendar_event2, name='create_event2'),

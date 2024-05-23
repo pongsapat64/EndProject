@@ -1,0 +1,24 @@
+{% extends 'components/base2.html' %}
+
+{% block content %}
+
+<table class="w-full border-collapse border border-gray-300">
+    <thead>
+        <tr>
+            <th class="border border-gray-300 px-4 py-2 text-xl">เวลา</th>
+            <th class="border border-gray-300 px-4 py-2 text-xl">ตัวเลือก</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for s in show %}
+        <tr>
+            <td class="border border-gray-300 px-4 py-2 text-xl">{{ s.start_time }} - {{ s.end_time }}</td>
+            <td class="border border-gray-300 px-4 py-2">
+                <a href="{% url 'deleteavt' s.id %}" class="bg-red-500 hover:bg-red-700 text-white font-bold py-1 px-4 rounded inline-block">ลบ</a>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+{% endblock %}

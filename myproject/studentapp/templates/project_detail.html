@@ -10,8 +10,8 @@
         {% for project in projects %}
         <li class="border border-gray-300 rounded-md p-4">
             <p class="text-gray-800 font-semibold"><strong>Topic:</strong> {{ project.topic }}</p>
-            <p class="text-gray-800"><strong>Document Link:</strong> {{ project.document }}</p>
-            <p class="text-gray-800"><strong>Presentation Slide Link:</strong> {{ project.presentationSlide }}</p>
+            <p class="text-gray-800 overflow-hidden whitespace-nowrap text-ellipsis"><strong>Document Link:</strong> <a href="{{ project.document }}" class="hover:text-blue-500">{{ project.document }}</a></p>
+            <p class="text-gray-800 overflow-hidden whitespace-nowrap text-ellipsis"><strong>Presentation Slide Link:</strong> <a href="{{ project.presentationSlide }}" class="hover:text-blue-500">{{ project.presentationSlide }}</a></p>
             <p class="text-gray-800"><strong>Year:</strong> {{ project.year }}</p>
         </li>
         {% endfor %}

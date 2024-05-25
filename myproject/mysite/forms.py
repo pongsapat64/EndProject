@@ -3,8 +3,7 @@ from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 
 from django.contrib import admin
-from .models import Adviser, Lecturer, Role
-from studentapp.models import Student
+from .models import *
 
 
 class UserProfileForm(forms.ModelForm):

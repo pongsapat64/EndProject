@@ -20,8 +20,8 @@ from django.urls import path, include
 urlpatterns = [
     path("admin/", admin.site.urls),
     path("", include("mysite.urls")),
-    path("studentapp/", include("studentapp.urls")),
-    path("lecturerapp/", include("lecturerapp.urls")),
+    # path("studentapp/", include("studentapp.urls")),
+    # path("lecturerapp/", include("lecturerapp.urls")),
     path("accounts/", include("allauth.urls")),
     path('auth/', include('social_django.urls', namespace='social')),
 ]

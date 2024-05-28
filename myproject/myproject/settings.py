@@ -41,8 +41,6 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "mysite",
-    "studentapp",
-    "lecturerapp",
     'django.contrib.sites', 
     'allauth',
     'allauth.account',

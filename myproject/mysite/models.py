@@ -24,8 +24,8 @@ class Student(models.Model):
         return f"{self.first_name} {self.last_name} {self.student_id}"
     
 class Lecturer(models.Model):
-    first_name = models.CharField(max_length=100)
-    last_name = models.CharField(max_length=100)
+    first_name = models.CharField(max_length=100, null=True)
+    last_name = models.CharField(max_length=100, null=True)
     user = models.OneToOneField(User, on_delete=models.CASCADE, null=True)
 
     def __str__(self):
@@ -39,16 +39,15 @@ class Adviser(models.Model):
         return f"Adviser: {self.lecturer} - {self.student}"
 
 class Appointment(models.Model):
-    student = models.ForeignKey(Student, on_delete=models.CASCADE)
-    committee = models.ForeignKey(Lecturer, on_delete=models.CASCADE)
+    student = models.ForeignKey(Student, on_delete=models.CASCADE, null=True)
+    committee = models.ForeignKey(Lecturer, on_delete=models.CASCADE, null=True)
     adviser = models.ForeignKey(Adviser, on_delete=models.CASCADE, blank=True, null=True)
-    start_time = models.DateTimeField()
-    end_time = models.DateTimeField()
-    summary = models.CharField(max_length=100)
+    start_time = models.DateTimeField(null=True)
+    end_time = models.DateTimeField(null=True)
+    summary = models.CharField(max_length=100, null=True)
 
     def __str__(self):
         return self.summary
-
 
 class AvailableTime(models.Model):
     lecturer = models.ForeignKey(Lecturer, on_delete=models.CASCADE, blank=True, null=True)

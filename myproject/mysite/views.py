@@ -106,22 +106,22 @@ def create_user(req):
                 user.save()
                 return redirect('read')
             else:
-                return HttpResponse("ชื่อผู้ใช้ถูกใช้แล้ว.")
+                return messages.error(req, 'ชื่อผู้ใช้ถูกใช้แล้ว!')
     else:
         form = UserCreateForm()
     return render(req, 'create.html', {'form': form})
 
 
-def update_user(request, id):
+def update_user(req, id):
     user = User.objects.get(pk=id)
-    if request.method == 'POST':
-        form = UserCreateForm(request.POST, instance=user)
+    if req.method == 'POST':
+        form = UserCreateForm(req.POST, instance=user)
         if form.is_valid():
             form.save()
-            return redirect('read')  
+            return redirect('read')
     else:
         form = UserCreateForm(instance=user)
-    return render(request, 'update.html', {'user': user})
+    return render(req, 'update.html', {'user': user, 'form': form})
 
 def delete_user(req, id):
     user = User.objects.get(pk=id)
@@ -132,10 +132,13 @@ def create_adviser(req):
     if req.method == 'POST':
         lecturer_id = req.POST.get('lecturer')
         student_id = req.POST.get('student')
-        lecturer = Lecturer.objects.get(id=lecturer_id)
-        student = Student.objects.get(id=student_id)
-        adviser = Adviser.objects.create(lecturer=lecturer, student=student)
-        return redirect('read')
+        if Adviser.objects.filter(lecturer_id=lecturer_id, student_id=student_id).exists():
+            return messages.error(req, 'ตำแหน่งที่ปรึกษานี้มีอยู่แล้ว!')
+        else:
+            lecturer = Lecturer.objects.get(id=lecturer_id)
+            student = Student.objects.get(id=student_id)
+            adviser = Adviser.objects.create(lecturer=lecturer, student=student)
+            return redirect('read')
     else:
         lecturers = Lecturer.objects.all()
         students = Student.objects.all()
@@ -147,17 +150,17 @@ def show_appoinment(req):
     return render(req, 'show_appoinment.html', {'appointment':appointment})
 
 
-def add_adviser_to_appointment(request, appointment_id):
+def add_adviser_to_appointment(req, appointment_id):
     appointment = get_object_or_404(Appointment, pk=appointment_id)
-    if request.method == 'POST':
-        adviser_id = request.POST.get('adviser')
+    if req.method == 'POST':
+        adviser_id = req.POST.get('adviser')
         adviser = get_object_or_404(Adviser, pk=adviser_id)
         appointment.adviser = adviser
         appointment.save()
         return redirect('show_appoinment')
     
     advisers = Adviser.objects.all()
-    return render(request, 'add_adviser_to_appointment.html', {'appointment': appointment, 'advisers': advisers})
+    return render(req, 'add_adviser_to_appointment.html', {'appointment': appointment, 'advisers': advisers})
 
 @user_passes_test(is_Student)
 @login_required(login_url='/mysite/login')
@@ -261,28 +264,23 @@ def create_google_calendar_event(start_time_str, end_time_str, summary, lecturer
 
 @user_passes_test(is_Student)
 @login_required(login_url='/mysite/login')
-def create_google_calendar_event2(request):
-    if request.method == 'POST':
-        start_time_str = request.POST.get('start_time')
+def create_google_calendar_event2(req):
+    if req.method == 'POST':
+        start_time_str = req.POST.get('start_time')
         start_time = start_time_str + ":00"
-        end_time_str = request.POST.get('end_time')
+        end_time_str = req.POST.get('end_time')
         end_time = end_time_str + ":00"
-        summary = request.POST.get('summary')
+        summary = req.POST.get('summary')
         
-        lecturer_ids_selected = request.POST.getlist('lecturers')
+        lecturer_ids_selected = req.POST.getlist('lecturers')
         
-        # Get emails of selected lecturers
         emails = Lecturer.objects.filter(id__in=lecturer_ids_selected).values_list('user__email', flat=True)
+        current_user_email = req.user.email
 
-        # Add current user's email as organizer
-        current_user_email = request.user.email
-
-        # Send invitation to selected lecturers
         for email in emails:
             create_google_calendar_event(start_time, end_time, summary, [email, current_user_email])
 
-        # Create Appointment instance
-        student_instance = get_or_create_student_instance(request.user)
+        student_instance = get_or_create_student_instance(req.user)
         committee_user = Lecturer.objects.get(id=lecturer_ids_selected[0])
 
         appointment = Appointment.objects.create(
@@ -293,7 +291,7 @@ def create_google_calendar_event2(request):
             committee=committee_user
         )
         appointment.save()
-    
+
     return redirect('status')
 
 
@@ -309,16 +307,16 @@ def get_or_create_student_instance(user):
 
 @user_passes_test(is_Student)
 @login_required(login_url='/mysite/login')
-def create_project(request):
-    if request.method == 'POST':
-        topic = request.POST.get('topic')
-        document = request.POST.get('document')
-        presentationSlide = request.POST.get('presentationSlide')
-        year = request.POST.get('year')
+def create_project(req):
+    if req.method == 'POST':
+        topic = req.POST.get('topic')
+        document = req.POST.get('document')
+        presentationSlide = req.POST.get('presentationSlide')
+        year = req.POST.get('year')
         
         # Save project to the database
         Project.objects.create(
-            user=request.user,
+            user=req.user,
             topic=topic,
             document=document,
             presentationSlide=presentationSlide,
@@ -328,7 +326,7 @@ def create_project(request):
         # Redirect to the project detail page
         return redirect('status')
     
-    return render(request, 'create_project.html')
+    return render(req, 'create_project.html')
 
 @user_passes_test(is_Student)
 @login_required(login_url='/mysite/login')
@@ -411,13 +409,13 @@ def deleteAvailableTime(req, id):
 
 @user_passes_test(is_Lecturer)
 @login_required(login_url='/mysite/login')
-def addtime_select(request, year=None, month=None, day=None):
+def addtime_select(req, year=None, month=None, day=None):
     context = {
         'year': year,
         'month': month,
         'day': day
     }
-    return render(request, 'addtimeselect.html', context)
+    return render(req, 'addtimeselect.html', context)
 
 @user_passes_test(is_Lecturer)
 @login_required(login_url='/mysite/login')

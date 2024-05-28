@@ -17,15 +17,11 @@
             </div>
             <div class="mb-4">
                 <label for="password" class="block text-md font-semibold mb-2">รหัสผ่าน</label>
-                <input type="password" name="password" id="password" value="" class="w-full border-gray-300 rounded-md p-2">
+                <input type="password" name="password" id="password" value="{{ user.password}}" class="w-full border-gray-300 rounded-md p-2">
             </div>
             <div class="mb-4">
                 <label for="email" class="block text-md font-semibold mb-2">อีเมล</label>
                 <input type="email" name="email" id="email" value="{{ user.email}}" class="w-full border-gray-300 rounded-md p-2">
-            </div>
-            <div class="mb-4">
-                <label for="adviser" class="block text-md font-semibold mb-2">ที่ปรึกษา</label>
-                <input type="text" name="adviser" id="adviser" value="{{ user.adviser.first_name}}" class="w-full border-gray-300 rounded-md p-2">
             </div>
             <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Submit</button>
         </form>

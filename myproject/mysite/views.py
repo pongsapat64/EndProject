@@ -145,23 +145,6 @@ def create_adviser(req):
         return render(req, 'create_adviser.html', {'lecturers': lecturers, 'students': students})
     
 
-def show_appoinment(req):
-    appointment = Appointment.objects.all()
-    return render(req, 'show_appoinment.html', {'appointment':appointment})
-
-
-def add_adviser_to_appointment(req, appointment_id):
-    appointment = get_object_or_404(Appointment, pk=appointment_id)
-    if req.method == 'POST':
-        adviser_id = req.POST.get('adviser')
-        adviser = get_object_or_404(Adviser, pk=adviser_id)
-        appointment.adviser = adviser
-        appointment.save()
-        return redirect('show_appoinment')
-    
-    advisers = Adviser.objects.all()
-    return render(req, 'add_adviser_to_appointment.html', {'appointment': appointment, 'advisers': advisers})
-
 @user_passes_test(is_Student)
 @login_required(login_url='/mysite/login')
 def show_committee(req):
@@ -196,7 +179,9 @@ def appointment_details(req, year, month, day, start_time, end_time):
 def status(req):
     student = Student.objects.get(user=req.user)
     appointments = Appointment.objects.filter(student=student)
-    return render(req, 'status.html', {'appointments': appointments})
+    adviser = Adviser.objects.filter(student=student).values_list('lecturer', flat=True)
+    lecturer = Lecturer.objects.filter(pk__in=adviser)
+    return render(req, 'status.html', {'appointments': appointments, 'lecturer':lecturer})
 
 @user_passes_test(is_Student)
 @login_required(login_url='/mysite/login')
@@ -280,30 +265,19 @@ def create_google_calendar_event2(req):
         for email in emails:
             create_google_calendar_event(start_time, end_time, summary, [email, current_user_email])
 
-        student_instance = get_or_create_student_instance(req.user)
         committee_user = Lecturer.objects.get(id=lecturer_ids_selected[0])
 
         appointment = Appointment.objects.create(
             start_time=start_time_str,
             end_time=end_time_str,
             summary=summary,
-            student=student_instance,
+            student=req.user.student,
             committee=committee_user
         )
         appointment.save()
 
     return redirect('status')
 
-
-def get_or_create_student_instance(user):
-    # Check if a Student instance already exists for the given user
-    try:
-        student_instance = Student.objects.get(user=user)
-    except Student.DoesNotExist:
-        # If no Student instance exists, create one
-        student_instance = Student.objects.create(user=user)
-    
-    return student_instance
 
 @user_passes_test(is_Student)
 @login_required(login_url='/mysite/login')

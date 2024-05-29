@@ -149,29 +149,13 @@ def create_adviser(req):
 @login_required(login_url='/mysite/login')
 def show_committee(req):
     lecturers = Lecturer.objects.all()
-    advisers = Adviser.objects.all()
-    return render(req, 'show_committee.html', {'lecturers': lecturers, 'adviser':advisers})
+    return render(req, 'show_committee.html', {'lecturers': lecturers})
     
 
 @user_passes_test(is_Student)
 @login_required(login_url='/mysite/login')
 def appointment(req):
     return render(req, 'appointment.html')
-
-
-@user_passes_test(is_Student)
-@login_required(login_url='/mysite/login')
-def appointment_details(req, year, month, day, start_time, end_time):
-    student = Student.objects.get(user=req.user)
-    context = {
-        'year': year,
-        'month': month,
-        'day': day,
-        'start_time': start_time,
-        'end_time': end_time,
-        'student': student,
-    }
-    return render(req, 'app_details.html', context)
     
 
 @user_passes_test(is_Student)
@@ -198,15 +182,17 @@ def score(req):
 @login_required(login_url='/mysite/login')
 def profile(req):
     if req.method == 'POST':
-        user = req.user
-        user.first_name = req.POST.get('first_name')
-        user.last_name = req.POST.get('last_name')
-        user.email = req.POST.get('email')
-        user.student.student_id = req.POST.get('student_id')
-        user.student.subject = req.POST.get('subject')
-        
-        user.save()
-        user.student.save()
+        form = StudentProfileForm(req.POST)
+        if form.is_valid():
+            form.save()
+            user = req.user
+            user.first_name = req.POST.get('first_name')
+            user.last_name = req.POST.get('last_name')
+            user.email = req.POST.get('email')
+            user.student.student_id = req.POST.get('student_id')
+            user.student.subject = req.POST.get('subject')
+            
+            user.save()
         
         return redirect('profile')
         
@@ -379,17 +365,6 @@ def deleteAvailableTime(req, id):
     avt = AvailableTime.objects.get(pk=id)
     avt.delete()
     return redirect('showavt') 
-
-
-@user_passes_test(is_Lecturer)
-@login_required(login_url='/mysite/login')
-def addtime_select(req, year=None, month=None, day=None):
-    context = {
-        'year': year,
-        'month': month,
-        'day': day
-    }
-    return render(req, 'addtimeselect.html', context)
 
 @user_passes_test(is_Lecturer)
 @login_required(login_url='/mysite/login')

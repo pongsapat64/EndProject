@@ -48,7 +48,6 @@ def login_view(req):
             user = authenticate(req, username=username, password=password)
             if user is not None:
                 login(req, user)
-                messages.success(req, 'Login successful.')
                 if is_admin(user):
                     return redirect('read')
                 elif is_Lecturer(user):
@@ -184,14 +183,13 @@ def profile(req):
     if req.method == 'POST':
         form = StudentProfileForm(req.POST)
         if form.is_valid():
-            form.save()
+            form.save(commit=False)
             user = req.user
             user.first_name = req.POST.get('first_name')
             user.last_name = req.POST.get('last_name')
             user.email = req.POST.get('email')
             user.student.student_id = req.POST.get('student_id')
             user.student.subject = req.POST.get('subject')
-            
             user.save()
         
         return redirect('profile')
@@ -253,6 +251,8 @@ def create_google_calendar_event2(req):
 
         committee_user = Lecturer.objects.get(id=lecturer_ids_selected[0])
 
+        if Appointment.objects.filter(start_time=start_time, end_time=end_time).exists():
+            return HttpResponse("มีการนัดนี้อยู่แล้ว")
         appointment = Appointment.objects.create(
             start_time=start_time_str,
             end_time=end_time_str,
@@ -274,7 +274,8 @@ def create_project(req):
         presentationSlide = req.POST.get('presentationSlide')
         year = req.POST.get('year')
         
-        # Save project to the database
+        if Project.objects.filter(topic=topic, document=document, presentationSlide=presentationSlide).exists():
+            return HttpResponse("มีโครงงานนี้อยู่แล้ว")
         Project.objects.create(
             user=req.user,
             topic=topic,
@@ -282,8 +283,6 @@ def create_project(req):
             presentationSlide=presentationSlide,
             year=year
         )
-        
-        # Redirect to the project detail page
         return redirect('status')
     
     return render(req, 'create_project.html')
@@ -346,9 +345,9 @@ def create_freetime(req):
                 )
                 return redirect('addtime')
             else:
-                return JsonResponse({'status': 'error', 'message': 'ข้อมูลซ้ำกัน'})
+                return HttpResponse("ข้อมูลซ้ำกัน")
         else:
-            return JsonResponse({'status': 'error', 'message': 'คุณไม่ใช่อาจารย์'})
+            return HttpResponse("คุณไม่ใช่อาจารย์")
     else:
         return render(req, 'addthetime.html')
 

@@ -16,17 +16,6 @@ class UserCreateForm(forms.ModelForm):
         model = User
         fields = ("username", "password", 'email')
 
-    def save(self, commit=True):
-        user = super(UserCreateForm, self).save(commit=False)
-        if commit:
-            user.save()
-        if self.cleaned_data.get('is_student'):
-            student_role = Role.objects.get(name='Student')
-            user.roles.add(student_role)
-        if self.cleaned_data.get('is_lecturer'):
-            lecturer_role = Role.objects.get(name='Lecturer')
-            user.roles.add(lecturer_role)
-        return user
 
 class LecturerProfileForm(forms.ModelForm):
     class Meta:

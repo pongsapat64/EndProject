@@ -48,6 +48,7 @@ def login_view(req):
             user = authenticate(req, username=username, password=password)
             if user is not None:
                 login(req, user)
+                messages.success(req, 'Login successful.')
                 if is_admin(user):
                     return redirect('read')
                 elif is_Lecturer(user):
@@ -221,11 +222,15 @@ def get_calendar_service():
 def create_google_calendar_event(start_time_str, end_time_str, summary, lecturers_emails, description=None, location=None):
     service = get_calendar_service()
 
+    conference_request = {
+        'createRequest': {'requestId': 'random-string', 'conferenceSolutionKey': {'type': 'hangoutsMeet'}}
+    }
     event = {
         "summary": summary,
         "start": {"dateTime": start_time_str, "timeZone": 'Asia/Bangkok'},
         "end": {"dateTime": end_time_str, "timeZone": 'Asia/Bangkok'},
         "attendees": [{"email": email} for email in lecturers_emails],
+        "conferenceData": conference_request,
     }
     event_result = service.events().insert(calendarId='primary', body=event, sendNotifications=True).execute()
 
@@ -246,8 +251,7 @@ def create_google_calendar_event2(req):
         emails = Lecturer.objects.filter(id__in=lecturer_ids_selected).values_list('user__email', flat=True)
         current_user_email = req.user.email
 
-        for email in emails:
-            create_google_calendar_event(start_time, end_time, summary, [email, current_user_email])
+        create_google_calendar_event(start_time, end_time, summary, list(emails) + [current_user_email])
 
         committee_user = Lecturer.objects.get(id=lecturer_ids_selected[0])
 
